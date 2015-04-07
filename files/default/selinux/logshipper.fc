@@ -1,0 +1,1 @@
+/var/run/logshipper -p system_u:object_r:logshipper_var_run_t:s0

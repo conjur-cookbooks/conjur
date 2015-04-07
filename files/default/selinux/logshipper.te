@@ -1,0 +1,14 @@
+module logshipper 0.0.1;
+
+require {
+        type syslogd_t;
+        class fifo_file { write open read };
+        attribute file_type;
+}
+
+type logshipper_var_run_t;
+typeattribute logshipper_var_run_t file_type;
+
+# allow syslog to write to logshipper pipe
+# read is also necessary for some reason
+allow syslogd_t logshipper_var_run_t:fifo_file { write open read };

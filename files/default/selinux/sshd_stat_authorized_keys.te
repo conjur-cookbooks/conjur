@@ -1,0 +1,12 @@
+
+module sshd_stat_authorized_keys 1.0;
+
+require {
+  type admin_home_t;
+  type sshd_t;
+  class file getattr;
+}
+
+#============= sshd_t ==============
+
+allow sshd_t admin_home_t:file getattr;
