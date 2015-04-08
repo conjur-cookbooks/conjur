@@ -1,4 +1,10 @@
-module ConjurTerminalLogin
+module LogshipperHelperMethods
+  def logshipper_fifo_path
+    '/var/run/logshipper'
+  end
+end
+
+module ConjurHelperMethods
   def conjur_cacertfile
     conjur_require_file("Conjur server certificate (conjur-acct.pem)", [ File.expand_path(conjur_conf['cert_file'], File.dirname(conjur_conf_filename)), File.expand_path("~/conjur-#{conjur_account}.pem") ])
   end
@@ -63,5 +69,10 @@ module ConjurTerminalLogin
 end
 
 class Chef::Resource
-  include ConjurTerminalLogin
+  include ConjurHelperMethods
+  include LogshipperHelperMethods
+end
+
+class Chef::Recipe
+  include LogshipperHelperMethods
 end

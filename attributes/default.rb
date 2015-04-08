@@ -7,3 +7,4 @@ default['conjur']['service_provider'] = 'upstart'
 # Also supported: syslog-ng
 default['conjur']['syslog_provider'] = 'rsyslog'
 default['conjur']['sshd']['debug'] = false
+  

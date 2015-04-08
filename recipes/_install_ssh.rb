@@ -1,3 +1,40 @@
+include_recipe "sshd-service"
+
+%w(nscd nslcd).each do |s| 
+  service s do
+    action :nothing
+  end
+end
+
+# This is used to cURL the public keys service
+package "curl"
+
+group node.conjur.group.conjurers.name do
+  gid node.conjur.group.conjurers.gid.to_i
+end
+
+group node.conjur.group.users.name do
+  gid node.conjur.group.users.gid.to_i
+end
+
+user "authkeylookup" do
+  system true
+  shell "/bin/false"
+end
+
+case node.platform_family
+  when 'debian'
+    include_recipe 'conjur::_install_ssh_debian'
+  when 'rhel'
+    include_recipe 'conjur::_install_ssh_rhel'
+  else 
+    raise "Unsupported platform family : #{node.platform_family}"
+end
+
+if node["platform"] == "centos"
+  include_recipe 'conjur::_install_selinux'
+end
+
 # Need this because there's not going to be a homedir the first time we 
 # login.  Without this the first attempt to ssh to the host will fail.
 ruby_block "Tell sshd not to print the last login" do

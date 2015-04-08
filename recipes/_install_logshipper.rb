@@ -1,13 +1,24 @@
-fifo_path = '/var/run/logshipper'
+user "logshipper" do
+  system true
+  shell '/bin/false'
+  group "conjur"
+end
+
+service_provider = node['conjur']['service_provider']
+include_recipe "conjur::_install_logshipper_#{service_provider}"
+
+syslog_provider = node['conjur']['syslog_provider']
+include_recipe "conjur::_install_logshipper_#{syslog_provider}"
+
 if node.etc.group.include? 'syslog'
   fifo_group = 'syslog'
 else
   fifo_group = 'root'
 end
 
-bash "mkfifo #{fifo_path}" do
+bash "mkfifo #{logshipper_fifo_path}" do
   not_if { begin
-    s = File.stat(fifo_path)
+    s = File.stat(logshipper_fifo_path)
     [
       s.pipe?,
       (s.mode & 0777 == 0460),
@@ -19,9 +30,9 @@ bash "mkfifo #{fifo_path}" do
   end }
 
   code """
-    rm -f #{fifo_path}
-    mkfifo --mode=0460 #{fifo_path}
-    chown logshipper:#{fifo_group} #{fifo_path}
+    rm -f #{logshipper_fifo_path}
+    mkfifo --mode=0460 #{logshipper_fifo_path}
+    chown logshipper:#{fifo_group} #{logshipper_fifo_path}
   """
   
   # we need to restart as the pipe has moved

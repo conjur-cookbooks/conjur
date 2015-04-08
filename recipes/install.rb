@@ -1,25 +1,10 @@
-include_recipe "sshd-service"
-
-chef_gem 'netrc'
-
-# This is used to cURL the public keys service
-package "curl"
-
-%w(nscd nslcd).each{|s| service s}
-
-include_recipe "conjur::_users"
-  
-case node.platform_family
-  when 'debian'
-    include_recipe 'conjur::_install_debian'
-  when 'rhel'
-    include_recipe 'conjur::_install_rhel'
-  else 
-    raise "Unsupported platform family : #{node.platform_family}"
+chef_gem 'netrc' do
+  compile_time true if Chef::Resource::ChefGem.method_defined?(:compile_time)
 end
 
-if node["platform"] == "centos"
-  include_recipe 'conjur::_install_selinux'
+group 'conjur' do
+  action :create
+  append true
 end
 
 include_recipe 'conjur::_install_ssh'

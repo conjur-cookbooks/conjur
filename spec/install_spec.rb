@@ -8,15 +8,26 @@ describe "conjur::install" do
     chef_run.converge(described_recipe)
   }
   before {
-    File.stub(:read).and_call_original
-    File.stub(:read).with('/etc/ssh/sshd_config').and_return ""
+    allow(File).to receive(:read).and_call_original
+    allow(File).to receive(:read).with('/etc/ssh/sshd_config').and_return("")
   }
   
   shared_examples_for "common installation" do
+    { conjurers: 50000, users: 5000 }.each do |g, gid|
+      it "creates group '#{g}'" do
+        expect(subject).to create_group(g.to_s).with(gid: gid)
+      end
+    end
+    %w(logshipper authkeylookup).each do |u|
+      it "creates user'#{u}'" do
+        expect(subject).to create_user(u)
+      end
+    end
+    
     it "performs common install steps" do
       expect(subject).to run_ruby_block("Configure sshd with AuthorizedKeysCommand")
       expect(subject).to run_ruby_block("Tell sshd not to print the last login")
-      expect(subject).to execute_bash("mkfifo /var/run/logshipper")
+      expect(subject).to run_bash("mkfifo /var/run/logshipper")
     end
   end
   

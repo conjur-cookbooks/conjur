@@ -1,4 +1,14 @@
-chef_gem 'netrc'
+include_recipe "sshd-service"
+
+chef_gem 'netrc' do
+  compile_time true if Chef::Resource::ChefGem.method_defined?(:compile_time)
+end
+
+%w(nscd nslcd).each do |s| 
+  service s do
+    action :enable
+  end
+end
 
 ruby_block "Enable DEBUG logging for sshd" do
   block do
@@ -8,12 +18,6 @@ ruby_block "Enable DEBUG logging for sshd" do
   end
   notifies :restart, "service[#{node.sshd_service.service}]"
   only_if { node['conjur']['sshd']['debug'] }
-end
-
-%w(nscd nslcd).each do |s| 
-  service s do
-    action :enable
-  end
 end
 
 openldap_dir = case node.platform_family

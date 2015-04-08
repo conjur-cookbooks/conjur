@@ -2,7 +2,7 @@ service 'logshipper' do
   provider Chef::Provider::Service::Upstart
 end
 
-command_line = "/usr/sbin/logshipper -n #{fifo_path} >> /var/log/logshipper.log 2>&1"
+command_line = "/usr/sbin/logshipper -n #{logshipper_fifo_path} >> /var/log/logshipper.log 2>&1"
 
 # differentiate here the platform-specific parts
 
