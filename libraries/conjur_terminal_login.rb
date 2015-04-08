@@ -1,6 +1,6 @@
 module ConjurTerminalLogin
   def conjur_cacertfile
-    conjur_require_file("Conjur server certificate (conjur-acct.pem)", [ File.expand_path(conjur_conf['cert_file'], "/etc/"), File.expand_path("~/conjur-#{conjur_account}.pem") ])
+    conjur_require_file("Conjur server certificate (conjur-acct.pem)", [ File.expand_path(conjur_conf['cert_file'], File.dirname(conjur_conf_filename)), File.expand_path("~/conjur-#{conjur_account}.pem") ])
   end
   
   def conjur_authorized_keys_command_url
@@ -8,7 +8,7 @@ module ConjurTerminalLogin
   end
   
   def conjur_account
-    ENV['CONJUR_ACCOUNT'] || conjur_conf['account']
+    ENV['CONJUR_ACCOUNT'] || conjur_conf['account'] or raise "Conjur account is not available"
   end
   
   def conjur_host_id
@@ -30,11 +30,14 @@ module ConjurTerminalLogin
   def conjur_appliance_url
     ENV['CONJUR_APPLIANCE_URL'] || conjur_conf['appliance_url']
   end
+  
+  def conjur_conf_filename
+    conjur_require_file("Conjur configuration (conjur.conf)", [ ENV['CONJURRC'], "/etc/conjur.conf" ])
+  end
 
   def conjur_conf
-    path = conjur_require_file("Conjur configuration (conjur.conf)", [ ENV['CONJURRC'], "/etc/conjur.conf" ])
     require 'yaml'
-    return YAML.load(path)
+    return YAML.load(conjur_conf_filename)
   end
   
   protected
@@ -51,9 +54,9 @@ module ConjurTerminalLogin
   end
   
   def conjur_require_file name, paths
-    paths.select do |f|
+    paths.compact.select do |f|
       File.file?(f)
-    end.tap do |path|
+    end.first.tap do |path|
       raise "No #{name} found" unless path
     end
   end

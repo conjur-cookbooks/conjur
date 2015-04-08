@@ -9,27 +9,17 @@ package "curl"
 
 include_recipe "conjur::_users"
   
-case node[:platform_family]
+case node.platform_family
   when 'debian'
     include_recipe 'conjur::install_debian'
   when 'rhel'
     include_recipe 'conjur::install_rhel'
   else 
-    raise "Unsupported platform family : #{node[:platform_family]}"
+    raise "Unsupported platform family : #{node.platform_family}"
 end
 
-if node[:platform] == "centos"
+if node["platform"] == "centos"
   include_recipe 'conjur::install_selinux'
-end
-
-ruby_block "Enable DEBUG logging for sshd" do
-  block do
-    edit = Chef::Util::FileEdit.new('/etc/ssh/sshd_config')
-    edit.search_file_replace_line "LogLevel INFO", "LogLevel DEBUG"
-    edit.write_file
-  end
-  notifies :restart, "service[#{node.sshd_service.service}]"
-  only_if { node.conjur.terminal_login['debug'] }
 end
 
 # Need this because there's not going to be a homedir the first time we 
@@ -50,7 +40,7 @@ end
 
 ruby_block "Configure sshd with AuthorizedKeysCommand" do
   block do
-    ssh_version = `ssh -V 2>&1`.split("\n")[0]
+    ssh_version = Mixlib::ShellOut.new(%Q(ssh -V 2>&1)).run_command.split("\n")[0]
     raise "Can't detect ssh version" unless ssh_version && ssh_version =~ /OpenSSH_([\d\.]+)/
     ssh_version = $1
 

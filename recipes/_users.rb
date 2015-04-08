@@ -1,9 +1,9 @@
-group node['conjur']['groupnames']['conjurers'] do
-  gid 50000
+group node.conjur.group.conjurers.name do
+  gid node.conjur.group.conjurers.gid.to_i
 end
 
-group node['conjur']['groupnames']['users'] do
-  gid 5000
+group node.conjur.group.users.name do
+  gid node.conjur.group.users.gid.to_i
 end
 
 group 'conjur' do

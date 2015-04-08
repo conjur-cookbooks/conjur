@@ -1,18 +1,28 @@
 chef_gem 'netrc'
 
+ruby_block "Enable DEBUG logging for sshd" do
+  block do
+    edit = Chef::Util::FileEdit.new('/etc/ssh/sshd_config')
+    edit.search_file_replace_line "LogLevel INFO", "LogLevel DEBUG"
+    edit.write_file
+  end
+  notifies :restart, "service[#{node.sshd_service.service}]"
+  only_if { node['conjur']['sshd']['debug'] }
+end
+
 %w(nscd nslcd).each do |s| 
   service s do
     action :enable
   end
 end
 
-openldap_dir = case node[:platform_family]
+openldap_dir = case node.platform_family
   when 'debian'
     '/etc/ldap'
   when 'rhel'
     '/etc/openldap'
   else 
-    raise "Unsupported platform family : #{node[:platform_family]}"
+    raise "Unsupported platform family : #{node.platform_family}"
 end
 
 template "#{openldap_dir}/ldap.conf" do
@@ -24,23 +34,25 @@ template "#{openldap_dir}/ldap.conf" do
   mode "0644"
 end
 
+nslcd_gid = case node.platform_family
+  when 'debian'
+    'nslcd'
+  when 'rhel'
+    'ldap'
+  else 
+    raise "Unsupported platform family : #{node.platform_family}"
+end
+
 template "/etc/nslcd.conf" do
   source "nslcd.conf.erb"
-  gid = case node[:platform_family]
-    when 'debian'
-      'nslcd'
-    when 'rhel'
-      'ldap'
-    else 
-      raise "Unsupported platform family : #{node[:platform_family]}"
-  end
   variables account: conjur_account, 
     host_id: conjur_host_id, 
     host_api_key: conjur_host_api_key, 
-    gid: gid, 
+    gid: nslcd_gid,
     uri: conjur_ldap_url,
     cacertfile: conjur_cacertfile
-  %w(nscd nslcd).each{ |s| notifies :restart, "service[#{s}]" }
+  notifies :restart, "service[nscd]"
+  notifies :restart, "service[nslcd]"
 end
 
 template "/usr/local/bin/conjur_authorized_keys" do
