@@ -8,4 +8,9 @@ describe 'conjur::_users' do
       expect(chef_run).to create_group(g.to_s).with(gid: gid)
     end
   end
+  %w(logshipper authkeylookup).each do |u|
+    it "creates user'#{u}'" do
+      expect(chef_run).to create_user(u)
+    end
+  end
 end

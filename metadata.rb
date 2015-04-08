@@ -7,6 +7,8 @@ version          '1.0.0'
 
 recipe "conjur::install", "Installs Conjur base packages and configuration, suitable for a foundation image."
 
+depends "apt"
+depends "yum"
 depends "sshd-service"
 
 %w(debian ubuntu centos fedora).each do |platform|

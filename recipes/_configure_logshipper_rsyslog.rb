@@ -1,5 +1,6 @@
-service 'rsyslog' do
+service 'syslog' do
   provider Chef::Provider::Service::Upstart if node.platform == 'ubuntu'
+  service_name 'rsyslog'
 end
 
 file '/etc/rsyslog.d/94-logshipper.conf' do

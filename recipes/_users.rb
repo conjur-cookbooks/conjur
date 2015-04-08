@@ -16,3 +16,8 @@ user "logshipper" do
   shell '/bin/false'
   group "conjur"
 end
+
+user "authkeylookup" do
+  system true
+  shell "/bin/false"
+end
