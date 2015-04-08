@@ -6,7 +6,7 @@ end
 
 %w(nscd nslcd).each do |s| 
   service s do
-    action :enable
+    action :nothing
   end
 end
 

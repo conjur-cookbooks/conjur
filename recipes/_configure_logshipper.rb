@@ -1,6 +1,7 @@
 if node.conjur.service_provider == "upstart"
   service 'logshipper' do
     provider Chef::Provider::Service::Upstart
+    action :nothing
   end
 end
 

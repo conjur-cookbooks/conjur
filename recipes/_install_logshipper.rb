@@ -36,8 +36,8 @@ bash "mkfifo #{logshipper_fifo_path}" do
   """
   
   # we need to restart as the pipe has moved
-  notifies :restart, 'service[logshipper]', :delayed
-  notifies :restart, 'service[syslog]', :delayed
+  notifies :restart, 'service[logshipper]', :delayed if node.conjur.service_provider == "upstart"
+  notifies :restart, 'service[syslog]', :delayed if node.conjur.service_provider == "upstart"
 end
 
 file "/var/log/logshipper.log" do
