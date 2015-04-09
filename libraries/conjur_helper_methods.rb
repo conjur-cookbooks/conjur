@@ -18,7 +18,7 @@ module ConjurHelperMethods
   end
   
   def conjur_host_id
-    id = [ ENV['CONJUR_AUTHN_LOGIN'], conjur_netrc[0] ].compact.first
+    id = [ ENV['CONJUR_AUTHN_LOGIN'], (node.conjur['identity']||{})['login'], conjur_netrc[0] ].compact.first
     raise "No host identity is available" unless id
     tokens = id.split('/')
     raise "Expecting 'host' id, got #{tokens[0]}" unless tokens[0] == 'host'
@@ -26,7 +26,7 @@ module ConjurHelperMethods
   end
   
   def conjur_host_api_key
-    ENV['CONJUR_AUTHN_API_KEY'] || conjur_netrc[1] or raise "No host api key is available"
+    ENV['CONJUR_AUTHN_API_KEY'] || (node.conjur['identity']||{})['password'] || conjur_netrc[1] or raise "No host api key is available"
   end
   
   def conjur_ldap_url
@@ -43,7 +43,7 @@ module ConjurHelperMethods
 
   def conjur_conf
     require 'yaml'
-    return YAML.load(conjur_conf_filename)
+    YAML.load(File.read(conjur_conf_filename))
   end
   
   protected

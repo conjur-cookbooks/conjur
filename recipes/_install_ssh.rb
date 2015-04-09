@@ -48,7 +48,9 @@ end
 
 ruby_block "Configure sshd with AuthorizedKeysCommand" do
   block do
-    ssh_version = Mixlib::ShellOut.new(%Q(ssh -V 2>&1)).run_command.split("\n")[0]
+    ssh_version = Mixlib::ShellOut.new(%Q(ssh -V 2>&1)).run_command
+    ssh_version.error!
+    ssh_version = ssh_version.stdout.split("\n")[0]
     raise "Can't detect ssh version" unless ssh_version && ssh_version =~ /OpenSSH_([\d\.]+)/
     ssh_version = $1
 
