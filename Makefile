@@ -8,13 +8,8 @@ vendor:
 test: vendor
 	bundle exec rspec
 
-cookbooks.tar.gz: Berksfile Berksfile.lock $(COOKBOOK_DIRS)
+docker/cookbooks.tar.gz: Berksfile Berksfile.lock $(COOKBOOK_DIRS)
 	berks package $@
 
-TAG = conjur-cookbook-test-$*
-
-docker/%.image: docker/% cookbooks.tar.gz
-	cp cookbooks.tar.gz $<
-	docker build -t $(TAG) $<
-	docker inspect -f '{{.Id}}' $(TAG) > $@
-	rm $</cookbooks.tar.gz
+docker/%.image: $(addprefix docker/, cookbooks.tar.gz conjur.conf Dockerfile $*)
+	$(MAKE) -C docker $*.image
