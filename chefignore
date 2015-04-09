@@ -47,10 +47,11 @@ a.out
 ###########
 .watchr
 .rspec
-spec/*
+spec
 spec/fixtures/*
 test/*
-features/*
+features
+docker
 Guardfile
 Procfile
 
@@ -74,6 +75,7 @@ Berksfile.lock
 cookbooks/*
 tmp
 .vendor
+cookbooks*.tar.gz
 
 # Cookbooks #
 #############
@@ -94,3 +96,6 @@ Vagrantfile
 # Travis #
 ##########
 .travis.yml
+
+# drop all dotfiles
+.*
