@@ -15,6 +15,8 @@ module ConjurHelperMethods
   
   def conjur_cacertfile
     conjur_require_file("Conjur server certificate (conjur-acct.pem)", [ File.expand_path(conjur_conf['cert_file'], File.dirname(conjur_conf_filename)), File.expand_path("~/conjur-#{conjur_account}.pem") ])
+  rescue
+    nil
   end
   
   def conjur_authorized_keys_command_url
