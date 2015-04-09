@@ -18,3 +18,4 @@ bin/*
 .kitchen/
 .kitchen.local.yml
 cookbooks.tar.gz
+docker/*.image
