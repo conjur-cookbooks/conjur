@@ -11,5 +11,6 @@ test: vendor
 docker/cookbooks.tar.gz: Berksfile Berksfile.lock $(COOKBOOK_DIRS)
 	berks package $@
 
-docker/%.image: $(addprefix docker/, cookbooks.tar.gz conjur.conf Dockerfile $*)
+.SECONDEXPANSION:
+docker/%.image: $(addprefix docker/, cookbooks.tar.gz conjur.conf Dockerfile $$*.docker)
 	$(MAKE) -C docker $*.image

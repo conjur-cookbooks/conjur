@@ -9,7 +9,10 @@ class TestMachine
   end
 
   def launch
-    @image.run
+    @container = Docker::Container.create \
+      'Image' => @image.id
+    @container.start \
+      'PublishAllPorts' => true
   end
 
   def configure
