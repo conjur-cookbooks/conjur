@@ -3,11 +3,13 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
   step 'a configured machine' do
     @machine = TestMachine.new
     @machine.configure
-    @machine.launch
+    @conjur = MockConjur.new
+    @machine.launch @conjur.id
+    sleep 2 # to settle
   end
 
   step 'a user logs in' do
-    pending 'step not implemented'
+    @machine.ssh
   end
 
   step 'an audit record is created' do

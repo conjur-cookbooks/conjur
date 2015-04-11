@@ -1,4 +1,5 @@
 require 'docker'
+require 'net/ssh'
 
 # TestMachine encapsulates test container setup and operation logic.
 # To use you need to set TRUSTED_IMAGE to an identifier of a Docker
@@ -8,11 +9,28 @@ class TestMachine
     @image = TestMachine.trusted_image
   end
 
-  def launch
+  def launch conjur
     @container = Docker::Container.create \
       'Image' => @image.id
     @container.start \
-      'PublishAllPorts' => true
+      'PublishAllPorts' => true,
+      'Links' => [[conjur, 'conjur'].join(':')]
+
+    ObjectSpace.define_finalizer self, proc { @container.delete force: true }
+
+    # this is needed to refresh info
+    @container = Docker::Container.get @container.id
+  end
+
+  def ssh
+    Net::SSH.start 'localhost', 'root',
+        port: ssh_port, keys: [TestMachine.key_file], config: false do |ssh|
+      ssh.exec! 'id'
+    end
+  end
+
+  def ssh_port
+    @container.info['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
   end
 
   def configure
@@ -42,6 +60,10 @@ class TestMachine
 
     def root_directory
       @root ||= File.expand_path '../../..', __FILE__
+    end
+
+    def key_file
+      File.expand_path '../../../docker/id_rsa', __FILE__
     end
 
     private
