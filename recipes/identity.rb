@@ -23,7 +23,7 @@ file "/etc/conjur.identity" do
 
   content """
 machine #{conjur_appliance_url}/authn
-    login host/#{conjur_host_id}
-    password #{conjur_host_api_key}
+    login host/#{conjur_host_id node}
+    password #{conjur_host_api_key node}
   """
 end.run_action(:create)

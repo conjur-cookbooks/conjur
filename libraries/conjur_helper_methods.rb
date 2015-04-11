@@ -4,7 +4,15 @@ module LogshipperHelperMethods
   end
 end
 
+module ConjurClientVersion
+  def conjur_client_version node
+    node.conjur.client.version
+  end
+end
+
 module ConjurHelperMethods
+  include ConjurClientVersion
+  
   def conjur_cacertfile
     conjur_require_file("Conjur server certificate (conjur-acct.pem)", [ File.expand_path(conjur_conf['cert_file'], File.dirname(conjur_conf_filename)), File.expand_path("~/conjur-#{conjur_account}.pem") ])
   end
@@ -17,16 +25,16 @@ module ConjurHelperMethods
     ENV['CONJUR_ACCOUNT'] || conjur_conf['account'] or raise "Conjur account is not available"
   end
   
-  def conjur_host_id
-    id = [ ENV['CONJUR_AUTHN_LOGIN'], (node.conjur['identity']||{})['login'], conjur_netrc[0] ].compact.first
+  def conjur_host_id node = nil
+    id = [ ENV['CONJUR_AUTHN_LOGIN'], (node ? (node.conjur['identity']||{}) : {})['login'], conjur_netrc[0] ].compact.first
     raise "No host identity is available" unless id
     tokens = id.split('/')
     raise "Expecting 'host' id, got #{tokens[0]}" unless tokens[0] == 'host'
     tokens[1..-1].join('/')
   end
   
-  def conjur_host_api_key
-    ENV['CONJUR_AUTHN_API_KEY'] || (node.conjur['identity']||{})['password'] || conjur_netrc[1] or raise "No host api key is available"
+  def conjur_host_api_key node = nil
+    ENV['CONJUR_AUTHN_API_KEY'] || (node ? (node.conjur['identity']||{}) : {})['password'] || conjur_netrc[1] or raise "No host api key is available"
   end
   
   def conjur_ldap_url
@@ -75,4 +83,5 @@ end
 
 class Chef::Recipe
   include LogshipperHelperMethods
+  include ConjurClientVersion
 end

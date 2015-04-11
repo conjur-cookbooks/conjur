@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 Conjur Inc
+# Copyright (C) 2014 Conjur Inc
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of
 # this software and associated documentation files (the "Software"), to deal in
@@ -19,25 +19,15 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-# This is not a normal cookbook, it's used mostly for testing.
-# It immediately creates the files '/etc/conjur.conf' and '/etc/conjur-acct.pem'.
+file_name = "conjur-#{conjur_client_version node}.rpm"
+target_path = File.join(Chef::Config[:file_cache_path], file_name)
 
-account = node.conjur.configuration.account
+rpm_package "conjur" do
+  source target_path
+  action :nothing
+end
 
-conjurrc = {
-  "account" => account,
-  "appliance_url" => node.conjur.configuration.appliance_url,
-  "plugins" => node.conjur.configuration.plugins.to_a,
-  "netrc_path" => "/etc/conjur.identity",
-  "cert_file" => "/etc/conjur-#{account}.pem"
-}
-
-file "/etc/conjur.conf" do
-  content YAML.dump(conjurrc)
-  mode "0644"
-end.run_action(:create)
-
-file "/etc/conjur-#{account}.pem" do
-  content node.conjur.configuration.ssl_certificate
-  mode "0644"
-end.run_action(:create)
+remote_file target_path do
+  source "https://s3.amazonaws.com/conjur-releases/omnibus/conjur-#{conjur_client_version node}.el6.x86_64.rpm"
+  notifies :install, "rpm_package[conjur]", :immediately
+end

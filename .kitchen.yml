@@ -12,14 +12,11 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[conjur::client]
       - recipe[conjur::conjurrc]
-      - recipe[conjur::identity]
-      - recipe[conjur::default]
+      - recipe[conjur::install]
     attributes:
       conjur:
-        identity:
-          login: host/the-host
-          password: the-password
         configuration:
           account: demo
           appliance_url: https://conjur/api

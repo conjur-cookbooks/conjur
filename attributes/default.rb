@@ -6,8 +6,14 @@ default['conjur']['group']['users']['gid'] = 5000
 default['conjur']['service_provider'] = 'upstart'
 # Also supported: syslog-ng
 default['conjur']['syslog_provider'] = 'rsyslog'
+# Write a sudoers.d which gives passwordless sudo to the 'conjurers' group
+default['conjur']['grant_passwordless_sudo_to_conjurers'] = true
+# Configure verbose logging for SSHD
 default['conjur']['sshd']['debug'] = false
 
+# These attributes are used only by the client.rb recipe
+default['conjur']['client']['version'] = '4.21.0-1'
+  
 # These attributes are used only by the conjurrc recipe, which can be used
 # to install the initial Conjur configuration and certificate.
 default['conjur']['configuration']['account'] = nil

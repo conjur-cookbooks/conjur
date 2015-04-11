@@ -10,6 +10,13 @@ end
   end
 end
 
+if node.conjur.grant_passwordless_sudo_to_conjurers == true
+  template "/etc/sudoers.d/conjurers" do
+    source "sudoers.d_conjurers.erb"
+    mode 0440
+  end
+end
+
 ruby_block "Enable DEBUG logging for sshd" do
   block do
     edit = Chef::Util::FileEdit.new('/etc/ssh/sshd_config')
