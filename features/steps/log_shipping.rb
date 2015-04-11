@@ -1,3 +1,5 @@
+require 'rspec/expectations'
+
 # Step definition for the log shipping feature.
 class Spinach::Features::LogShipping < Spinach::FeatureSteps
   step 'a configured machine' do
@@ -13,6 +15,6 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
   end
 
   step 'an audit record is created' do
-    pending 'step not implemented'
+    expect(@conjur.audits).to include 'login'
   end
 end

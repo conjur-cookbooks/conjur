@@ -4,12 +4,16 @@ require 'docker'
 class MockConjur
   def initialize
     @container = Docker::Container.create 'Image' => MockConjur.image_id
-    @container.start
+    @container.start 'Binds' => ["#{MockConjur.server_script}:/server"]
     ObjectSpace.define_finalizer self, proc { @container.delete force: true }
   end
 
   def id
     @container.id
+  end
+
+  def audits
+    @container.exec ['cat', '/audits']
   end
 
   class << self
@@ -20,10 +24,13 @@ class MockConjur
     def image
       @image ||= Docker::Image.build <<-DOCKER
         FROM conjurinc/alpine
-        RUN apk update && apk add nginx
-        RUN mkdir -p /tmp/nginx
-        CMD nginx && tail -f /var/log/nginx/access.log
+        RUN apk update && apk add ruby
+        CMD /server
       DOCKER
+    end
+
+    def server_script
+      File.expand_path '../mock_conjur_server.rb', __FILE__
     end
   end
 end
