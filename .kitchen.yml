@@ -28,6 +28,8 @@ suites:
     attributes:
       conjur:
         configuration:
+          service_provider: runit
+          syslog_provider: syslog-ng
           account: demo
           appliance_url: https://conjur/api
           ssl_certificate: |
