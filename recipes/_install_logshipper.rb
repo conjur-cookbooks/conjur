@@ -10,7 +10,7 @@ include_recipe "conjur::_install_logshipper_#{service_provider}"
 syslog_provider = node['conjur']['syslog_provider']
 include_recipe "conjur::_install_logshipper_#{syslog_provider}"
 
-if node['etc']['group']include? 'syslog'
+if node['etc']['group'].include? 'syslog'
   fifo_group = 'syslog'
 else
   fifo_group = 'root'

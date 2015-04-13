@@ -5,7 +5,6 @@ module LogshipperHelperMethods
 end
 
 module ConjurHelperMethods
-  include ConjurClientVersion
 
   def conjur_cacertfile
     conjur_require_file("Conjur server certificate (conjur-acct.pem)", [ File.expand_path(conjur_conf['cert_file'], File.dirname(conjur_conf_filename)), File.expand_path("~/conjur-#{conjur_account}.pem") ])
@@ -77,5 +76,4 @@ end
 
 class Chef::Recipe
   include LogshipperHelperMethods
-  include ConjurClientVersion
 end
