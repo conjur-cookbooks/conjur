@@ -13,7 +13,7 @@ class MockConjur
   end
 
   def audits
-    @container.exec ['cat', '/audits']
+    JSON.parse @container.exec(['cat', '/audits']).first.first
   end
 
   class << self
