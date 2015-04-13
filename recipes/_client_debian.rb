@@ -19,15 +19,14 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-file_name = "conjur-#{conjur_client_version node}.deb"
+client_version = node['conjur']['client']['version']
+file_name = "conjur-#{client_version}.deb"
 target_path = File.join(Chef::Config[:file_cache_path], file_name)
+
+remote_file target_path do
+  source "https://s3.amazonaws.com/conjur-releases/omnibus/conjur_#{client_version}_amd64.deb"
+end
 
 dpkg_package "conjur" do
   source target_path
-  action :nothing
-end
-
-remote_file target_path do
-  source "https://s3.amazonaws.com/conjur-releases/omnibus/conjur_#{conjur_client_version node}_amd64.deb"
-  notifies :install, "dpkg_package[conjur]", :immediately
 end

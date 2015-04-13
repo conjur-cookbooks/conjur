@@ -4,12 +4,6 @@ module LogshipperHelperMethods
   end
 end
 
-module ConjurClientVersion
-  def conjur_client_version node
-    node.conjur.client.version
-  end
-end
-
 module ConjurHelperMethods
   include ConjurClientVersion
   

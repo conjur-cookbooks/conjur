@@ -19,15 +19,14 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-file_name = "conjur-#{conjur_client_version node}.rpm"
+client_version = node['conjur']['client']['version']
+file_name = "conjur-#{client_version}.rpm"
 target_path = File.join(Chef::Config[:file_cache_path], file_name)
+
+remote_file target_path do
+  source "https://s3.amazonaws.com/conjur-releases/omnibus/conjur-#{client_version}.el6.x86_64.rpm"
+end
 
 rpm_package "conjur" do
   source target_path
-  action :nothing
-end
-
-remote_file target_path do
-  source "https://s3.amazonaws.com/conjur-releases/omnibus/conjur-#{conjur_client_version node}.el6.x86_64.rpm"
-  notifies :install, "rpm_package[conjur]", :immediately
 end
