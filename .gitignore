@@ -1,3 +1,4 @@
+rubocop.xml
 *.tar.gz
 cookbooks
 .vendor

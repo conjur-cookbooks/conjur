@@ -1,10 +1,13 @@
-.PHONY: vendor test kitchen
+.PHONY: rubocop foodcritic rspec kitchen
 
-vendor:
-	berks vendor .vendor
+rubocop:
+	chef exec rubocop --require rubocop/formatter/checkstyle_formatter --format RuboCop::Formatter::CheckstyleFormatter --no-color --out rubocop.xml
 
-test: vendor
-	bundle exec rspec
+foodcritic:
+	chef exec foodcritic -f correctness .
+
+rspec:
+	chef exec rspec spec/
 
 kitchen:
 	conjur env run -- chef exec kitchen test -d always -c 3

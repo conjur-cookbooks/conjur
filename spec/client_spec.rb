@@ -16,7 +16,7 @@ describe "conjur::client" do
     let(:platform_family) { nil }
     it "installs conjur apt package" do
       expect(subject).to create_remote_file("#{chef_cache}/conjur-4.5.1-0.deb")
-      expect(subject.remote_file("#{chef_cache}/conjur-4.5.1-0.deb")).to notify("dpkg_package[conjur]").to(:install)
+      expect(subject).to install_dpkg_package("conjur").with(source: "#{chef_cache}/conjur-4.5.1-0.deb")
     end
   end
   context "fedora" do
@@ -25,7 +25,7 @@ describe "conjur::client" do
     let(:version) { "6.2" }
     it "installs conjur rpm package" do
       expect(subject).to create_remote_file("#{chef_cache}/conjur-4.5.1-0.rpm")
-      expect(subject.remote_file("#{chef_cache}/conjur-4.5.1-0.rpm")).to notify("rpm_package[conjur]").to(:install)
+      expect(subject).to install_rpm_package("conjur").with(source: "#{chef_cache}/conjur-4.5.1-0.rpm")
     end
   end
 end
