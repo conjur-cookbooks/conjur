@@ -4,7 +4,7 @@ rubocop:
 	chef exec rubocop --require rubocop/formatter/checkstyle_formatter --format RuboCop::Formatter::CheckstyleFormatter --no-color --out rubocop.xml
 
 foodcritic:
-	chef exec foodcritic -f correctness .
+	chef exec foodcritic .
 
 rspec:
 	chef exec rspec spec/
