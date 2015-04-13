@@ -18,7 +18,7 @@ upstart_script = %Q(
 )
 
 # workarounds
-case node.platform_family
+case node['platform_family']
 when 'rhel'
   upstart_script = %Q(
     # rsyslog isn't upstarted here

@@ -10,11 +10,11 @@ end
   end
 end
 
-if node.conjur.grant_passwordless_sudo_to_conjurers == true
-  template "/etc/sudoers.d/conjurers" do
-    source "sudoers.d_conjurers.erb"
-    mode 0440
-  end
+template "/etc/sudoers.d/conjurers" do
+  source "sudoers.d_conjurers.erb"
+  mode 0440
+
+  only_if { node['conjur']['grant_passwordless_sudo_to_conjurers'] == true }
 end
 
 ruby_block "Enable DEBUG logging for sshd" do
@@ -23,17 +23,17 @@ ruby_block "Enable DEBUG logging for sshd" do
     edit.search_file_replace_line "LogLevel INFO", "LogLevel DEBUG"
     edit.write_file
   end
-  notifies :restart, "service[#{node.sshd_service.service}]"
+  notifies :restart, "service[#{node['sshd_service']['service']}]"
   only_if { node['conjur']['sshd']['debug'] }
 end
 
-openldap_dir = case node.platform_family
+openldap_dir = case node['platform_family']
   when 'debian'
     '/etc/ldap'
   when 'rhel'
     '/etc/openldap'
   else 
-    raise "Unsupported platform family : #{node.platform_family}"
+    raise "Unsupported platform family : #{node['platform_family']}"
 end
 
 template "#{openldap_dir}/ldap.conf" do
@@ -45,13 +45,13 @@ template "#{openldap_dir}/ldap.conf" do
   mode "0644"
 end
 
-nslcd_gid = case node.platform_family
+nslcd_gid = case node['platform_family']
   when 'debian'
     'nslcd'
   when 'rhel'
     'ldap'
   else 
-    raise "Unsupported platform family : #{node.platform_family}"
+    raise "Unsupported platform family : #{node['platform_family']}"
 end
 
 template "/etc/nslcd.conf" do
