@@ -1,6 +1,10 @@
 ---
-driver:
-  name: vagrant
+driver_plugin: docker
+
+driver_config:
+  use_sudo: true
+  privileged: true
+  socket: <%= ENV['DOCKER_HOST'] || 'unix:///var/run/docker.sock' %>
 
 provisioner:
   name: chef_zero
@@ -8,6 +12,12 @@ provisioner:
 platforms:
   - name: ubuntu-12.04
   - name: centos-6.5
+  #- name: amazon-linux
+  #  driver_config:
+  #    image: vettl/amazon-linux:2014.03
+  #- name: rhel6.5
+  #  driver_config:
+  #    image: richxsl/rhel6.5
 
 suites:
   - name: default
@@ -38,4 +48,4 @@ suites:
             8XV4phCuptb75KspvmhjB4EpzU5vZYnEKWUIzIQMztdbf/JMet2vG+C2xNCOTRnC
             rG+Mmg4IiA+YnPrnR2UiFLrK4HiWWOgV3fJnU0zi0lfCzpSD7WPO6NuvAfOVNd3m
             cA==
-            -----END CERTIFICATE-----  
+            -----END CERTIFICATE-----
