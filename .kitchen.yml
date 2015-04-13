@@ -1,5 +1,16 @@
 ---
-driver_plugin: docker
+driver:
+  name: ec2
+  aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+  aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  aws_ssh_key_id: jenkins-ami-builder-2
+  ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
+  availability_zone: us-east-1e
+  region: us-east-1
+  flavor_id: m3.medium
+  security_group_ids: sg-7c6eef16
+  ssh_timeout: 10
+  ssh_retries: 5
 
 driver_config:
   use_sudo: true
@@ -11,13 +22,7 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
-  - name: centos-6.5
-  #- name: amazon-linux
-  #  driver_config:
-  #    image: vettl/amazon-linux:2014.03
-  #- name: rhel6.5
-  #  driver_config:
-  #    image: richxsl/rhel6.5
+  - name: centos-6.4
 
 suites:
   - name: default

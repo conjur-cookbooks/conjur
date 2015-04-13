@@ -1,0 +1,3 @@
+aws_access_key_id: !var aws/ci/sys_powerful/access_key_id
+aws_secret_access_key: !var aws/ci/sys_powerful/secret_access_key
+aws_private_key: !tmp aws/ci/jenkins-ami-builder-2/private_key
