@@ -19,3 +19,5 @@ bin/*
 .kitchen.local.yml
 cookbooks.tar.gz
 docker/*.image
+
+features/reports
