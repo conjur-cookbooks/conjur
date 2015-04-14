@@ -13,7 +13,6 @@ driver:
   ssh_retries: 5
 
 driver_config:
-  use_sudo: true
   privileged: true
   socket: <%= ENV['DOCKER_HOST'] || 'unix:///var/run/docker.sock' %>
 
@@ -22,7 +21,11 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
+    image_id: ami-bb9a08ba
+    username: ubuntu
   - name: centos-6.4
+    image_id: ami-9ffa709e
+    username: ec2-user
 
 suites:
   - name: default
