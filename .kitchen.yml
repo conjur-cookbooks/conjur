@@ -3,9 +3,8 @@ driver:
   name: ec2
   aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
   aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
-  aws_ssh_key_id: jenkins-ami-builder-2
+  aws_ssh_key_id: test-kitchen
   ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
-  availability_zone: us-east-1e
   region: us-east-1
   flavor_id: m3.medium
   security_group_ids: sg-7c6eef16
@@ -21,11 +20,10 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
-    image_id: ami-bb9a08ba
-    username: ubuntu
-  - name: centos-6.4
-    image_id: ami-9ffa709e
-    username: ec2-user
+  - name: centos-6
+    driver:
+      image_id: ami-c2a818aa
+      username: root
 
 suites:
   - name: default
