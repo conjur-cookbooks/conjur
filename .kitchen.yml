@@ -21,6 +21,9 @@ provisioner:
 platforms:
   - name: ubuntu-12.04
   - name: ubuntu-14.04
+    driver:
+      image_id: ami-9eaa1cf6
+      username: ubuntu
 
 suites:
   - name: default
