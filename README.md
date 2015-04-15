@@ -27,7 +27,8 @@ These recipes can be used to build a "foundation" image, which is able to create
 
 ### Platforms
 
-* Ubuntu 12 LTS
+* Ubuntu 12.04 LTS
+* Ubuntu 14.04 LTS
 
 ### Dependency Cookbooks
 
