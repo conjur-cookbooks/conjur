@@ -7,7 +7,7 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
     @machine.configure
     @conjur = MockConjur.new
     @machine.launch @conjur.id
-    sleep 2 # to settle
+    sleep 3 # to settle
   end
 
   step 'a user logs in' do
