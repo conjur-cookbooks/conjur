@@ -22,12 +22,12 @@
 # This is not a normal cookbook, it's used mostly for testing.
 # It immediately creates the files '/etc/conjur.conf' and '/etc/conjur-acct.pem'.
 
-account = node.conjur.configuration.account
+account = node['conjur']['configuration']['account']
 
 conjurrc = {
   "account" => account,
-  "appliance_url" => node.conjur.configuration.appliance_url,
-  "plugins" => node.conjur.configuration.plugins.to_a,
+  "appliance_url" => node['conjur']['configuration']['appliance_url'],
+  "plugins" => node['conjur']['configuration']['plugins'].to_a,
   "netrc_path" => "/etc/conjur.identity",
   "cert_file" => "/etc/conjur-#{account}.pem"
 }
@@ -38,6 +38,6 @@ file "/etc/conjur.conf" do
 end.run_action(:create)
 
 file "/etc/conjur-#{account}.pem" do
-  content node.conjur.configuration.ssl_certificate
+  content node['conjur']['configuration']['ssl_certificate']
   mode "0644"
 end.run_action(:create)

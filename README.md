@@ -27,10 +27,8 @@ These recipes can be used to build a "foundation" image, which is able to create
 
 ### Platforms
 
-* Ubuntu 12 LTS+
-* CentOS 6+
-* RHEL 6+
-* Amazon Linux
+* Ubuntu 12.04 LTS
+* Ubuntu 14.04 LTS
 
 ### Dependency Cookbooks
 
@@ -43,7 +41,6 @@ See `attributes/default.rb` for defaults.
 ### SSH
 
 The following attributes pertain to login (ssh) functionality.
-
 
 * `node['conjur']['group']['conjurers']['name']` Name of the Unix group corresponding to Conjur `update` privilege
 * `node['conjur']['group']['conjurers']['gid']` GID number of the Unix group corresponding to Conjur `update` privilege
@@ -65,7 +62,7 @@ The following attributes pertain to installation of the [Conjur command-line too
 The following attributes can be used to configure the secure connection to the Conjur server:
 
 * `node['conjur']['configuration']['account']` Conjur organization account
-* `node['conjur']['configuration']['appliance_url']` ULR to the Conjur appliance, in the form `https://conjur/api`.
+* `node['conjur']['configuration']['appliance_url']` URL to the Conjur appliance, in the form `https://conjur/api`.
 * `node['conjur']['configuration']['ssl_certificate']` Conjur server SSL certificate
 * `node['conjur']['configuration']['plugins']` List of activated CLI plugins
 

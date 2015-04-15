@@ -1,15 +1,21 @@
-.PHONY: test spinach spec
+.PHONY: rubocop foodcritic rspec kitchen acceptance spinach
 
-COOKBOOK_DIRS = attributes files libraries recipes templates
-PLATFORMS = phusion
+rubocop:
+	chef exec rubocop --require rubocop/formatter/checkstyle_formatter --format RuboCop::Formatter::CheckstyleFormatter --no-color --out rubocop.xml
 
-test: spinach spec
+foodcritic:
+	chef exec foodcritic .
 
-spec:
-	bundle exec rspec
+rspec:
+	chef exec rspec spec/
+
+kitchen:
+	conjur env run -- chef exec kitchen test -d always -c 3
+
+acceptance: spinach spec
 
 docker/cookbooks.tar.gz: Berksfile $(COOKBOOK_DIRS)
-	berks package $@
+	chef exec berks package $@
 
 spinach: $(addprefix features/reports/, $(PLATFORMS))
 

@@ -1,13 +1,29 @@
 ---
 driver:
-  name: vagrant
+  name: ec2
+  aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+  aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  aws_ssh_key_id: test-kitchen
+  ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
+  region: us-east-1
+  flavor_id: m3.medium
+  security_group_ids: sg-7c6eef16
+  ssh_timeout: 10
+  ssh_retries: 5
+
+driver_config:
+  privileged: true
+  socket: <%= ENV['DOCKER_HOST'] || 'unix:///var/run/docker.sock' %>
 
 provisioner:
   name: chef_zero
 
 platforms:
   - name: ubuntu-12.04
-  - name: centos-6.5
+  - name: ubuntu-14.04
+    driver:
+      image_id: ami-9eaa1cf6
+      username: ubuntu
 
 suites:
   - name: default
@@ -18,6 +34,8 @@ suites:
     attributes:
       conjur:
         configuration:
+          service_provider: runit
+          syslog_provider: syslog-ng
           account: demo
           appliance_url: https://conjur/api
           ssl_certificate: |
@@ -38,4 +56,4 @@ suites:
             8XV4phCuptb75KspvmhjB4EpzU5vZYnEKWUIzIQMztdbf/JMet2vG+C2xNCOTRnC
             rG+Mmg4IiA+YnPrnR2UiFLrK4HiWWOgV3fJnU0zi0lfCzpSD7WPO6NuvAfOVNd3m
             cA==
-            -----END CERTIFICATE-----  
+            -----END CERTIFICATE-----

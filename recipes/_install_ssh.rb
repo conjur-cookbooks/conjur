@@ -1,6 +1,6 @@
 include_recipe "sshd-service"
 
-%w(nscd nslcd).each do |s| 
+%w(nscd nslcd).each do |s|
   service s do
     action :nothing
   end
@@ -9,12 +9,12 @@ end
 # This is used to cURL the public keys service
 package "curl"
 
-group node.conjur.group.conjurers.name do
-  gid node.conjur.group.conjurers.gid.to_i
+group node['conjur']['group']['conjurers']['name'] do
+  gid node['conjur']['group']['conjurers']['gid'].to_i
 end
 
-group node.conjur.group.users.name do
-  gid node.conjur.group.users.gid.to_i
+group node['conjur']['group']['users']['name'] do
+  gid node['conjur']['group']['users']['gid'].to_i
 end
 
 user "authkeylookup" do
@@ -22,20 +22,20 @@ user "authkeylookup" do
   shell "/bin/false"
 end
 
-case node.platform_family
+case node['platform_family']
   when 'debian'
     include_recipe 'conjur::_install_ssh_debian'
   when 'rhel'
     include_recipe 'conjur::_install_ssh_rhel'
-  else 
-    raise "Unsupported platform family : #{node.platform_family}"
+  else
+    raise "Unsupported platform family : #{node['platform_family']}"
 end
 
 if node["platform"] == "centos"
   include_recipe 'conjur::_install_selinux'
 end
 
-# Need this because there's not going to be a homedir the first time we 
+# Need this because there's not going to be a homedir the first time we
 # login.  Without this the first attempt to ssh to the host will fail.
 ruby_block "Tell sshd not to print the last login" do
   block do
@@ -43,7 +43,7 @@ ruby_block "Tell sshd not to print the last login" do
     edit.search_file_replace_line "PrintLastLog yes", "PrintLastLog no"
     edit.write_file
   end
-  notifies :restart, "service[#{node.sshd_service.service}]"
+  notifies :restart, "service[#{node['sshd_service']['service']}]"
 end
 
 ruby_block "Configure sshd with AuthorizedKeysCommand" do
@@ -62,7 +62,7 @@ ruby_block "Configure sshd with AuthorizedKeysCommand" do
     end
 
     edit = Chef::Util::FileEdit.new('/etc/ssh/sshd_config')
-    
+
     edit.insert_line_after_match(/#?AuthorizedKeysFile/, <<-CMD)
 AuthorizedKeysCommand /usr/local/bin/conjur_authorized_keys
 #{run_as_option} authkeylookup
@@ -72,5 +72,5 @@ AuthorizedKeysCommand /usr/local/bin/conjur_authorized_keys
   end
   # Need this so the lines don't get inserted multiple times
   not_if { File.read('/etc/ssh/sshd_config').index('AuthorizedKeysCommand /usr/local/bin/conjur_authorized_keys') }
-  notifies :restart, "service[#{node.sshd_service.service}]"
+  notifies :restart, "service[#{node['sshd_service']['service']}]"
 end

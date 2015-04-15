@@ -1,4 +1,4 @@
-require 'serverspec'
+require 'spec_helper'
 
 describe group('conjur') do
   it { should exist }
