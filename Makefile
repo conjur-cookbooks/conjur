@@ -19,7 +19,7 @@ docker/cookbooks.tar.gz: Berksfile $(COOKBOOK_DIRS)
 
 spinach: $(addprefix features/reports/, $(PLATFORMS))
 
-features/reports/%: docker/%.image $(COOKBOOK_DIRS)
+features/reports/%: docker/%.image $(COOKBOOK_DIRS) features
 	rm -rf $@
 	mkdir -p $@
 	CI_REPORTS=$@ TRUSTED_IMAGE=$(shell cat $<) spinach -r double_reporter
