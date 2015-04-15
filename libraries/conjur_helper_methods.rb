@@ -4,6 +4,25 @@ module LogshipperHelperMethods
   end
 end
 
+# Helper methods to detect stuff
+module ConjurDetect
+  def self.detect_init
+    if test 'x', '/sbin/runit'
+      'runit'
+    else
+      'upstart'
+    end
+  end
+
+  def self.detect_syslog
+    if test 'x', '/usr/sbin/syslog-ng'
+      'syslog-ng'
+    else
+      'rsyslog'
+    end
+  end
+end
+
 module ConjurHelperMethods
 
   def conjur_cacertfile
