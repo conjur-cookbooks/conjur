@@ -1,3 +1,5 @@
+include_recipe 'apt'
+
 # Answer the installer questions about LDAP server location, root name, etc
 cookbook_file "/tmp/ldap.seed" do
   source "ldap.seed"
