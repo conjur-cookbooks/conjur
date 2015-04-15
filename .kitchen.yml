@@ -20,10 +20,6 @@ provisioner:
 
 platforms:
   - name: ubuntu-12.04
-  - name: centos-6
-    driver:
-      image_id: ami-c2a818aa
-      username: root
 
 suites:
   - name: default

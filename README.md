@@ -27,10 +27,7 @@ These recipes can be used to build a "foundation" image, which is able to create
 
 ### Platforms
 
-* Ubuntu 12 LTS+
-* CentOS 6+
-* RHEL 6+
-* Amazon Linux
+* Ubuntu 12 LTS
 
 ### Dependency Cookbooks
 
