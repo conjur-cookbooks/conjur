@@ -10,7 +10,3 @@ ADD upstart_patch.rb /tmp/upstart_patch.rb
 RUN cat /tmp/upstart_patch.rb >> \
   /opt/chef/embedded/apps/chef/lib/chef/provider/service/upstart.rb && \
   rm /tmp/upstart_patch.rb
-
-ADD cookbooks.tar.gz /var/chef
-
-RUN chef-solo -o conjur::install

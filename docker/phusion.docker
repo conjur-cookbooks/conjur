@@ -4,9 +4,5 @@ ENV CHEF_VERSION 12.2.1
 
 RUN curl -L https://www.chef.io/chef/install.sh | sudo bash - /dev/stdin -v $CHEF_VERSION
 
-ADD cookbooks.tar.gz /var/chef
-
-RUN chef-solo -o conjur::install
-
 # enable ssh
 RUN rm -f /etc/service/sshd/down
