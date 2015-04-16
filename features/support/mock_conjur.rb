@@ -13,7 +13,8 @@ class MockConjur
   end
 
   def audits
-    JSON.parse @container.exec(['cat', '/audits']).first.first
+    # split it into lines, then parse each one separately
+    @container.exec(['cat', '/audits']).first.first.lines.map &JSON.method(:parse)
   end
 
   class << self

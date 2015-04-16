@@ -16,6 +16,6 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
   end
 
   step 'an audit record is created' do
-    expect(@conjur.audits).to include 'action' => 'login'
+    expect(@conjur.audits).to include include 'action' => 'login'
   end
 end
