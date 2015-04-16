@@ -1,0 +1,16 @@
+FROM ubuntu-upstart:trusty
+
+RUN apt-get -y install wget
+
+ENV CHEF_VERSION 12.2.1
+RUN wget -O- https://www.chef.io/chef/install.sh | sudo bash - /dev/stdin -v $CHEF_VERSION
+
+# patch chef up so it works on docker
+ADD upstart_patch.rb /tmp/upstart_patch.rb
+RUN cat /tmp/upstart_patch.rb >> \
+  /opt/chef/embedded/apps/chef/lib/chef/provider/service/upstart.rb && \
+  rm /tmp/upstart_patch.rb
+
+ADD cookbooks.tar.gz /var/chef
+
+RUN chef-solo -o conjur::install
