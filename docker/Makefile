@@ -7,7 +7,7 @@
 	docker inspect -f '{{.Id}}' $(NAME) > $@
 
 # Make make not delete the cached image
-.SECONDARY: phusion-base.image
+.SECONDARY: phusion-base.image trusty-base.image
 
 NAME = conjurinc/conjur-cookbook-test-$*
 %.image: Dockerfile %-base.image cookbooks.tar.gz conjur.conf

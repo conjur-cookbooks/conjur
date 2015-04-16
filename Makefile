@@ -27,6 +27,7 @@ features/reports/%: docker/%.image $(COOKBOOK_DIRS) features
 	mkdir -p $@
 	CI_REPORTS=$@ TRUSTED_IMAGE=$(shell cat $<) spinach -r double_reporter
 
+.SECONDARY: phusion.image trusty.image
 .SECONDEXPANSION:
 docker/%.image: $(addprefix docker/, cookbooks.tar.gz conjur.conf Dockerfile $$*.docker)
 	$(MAKE) -C docker $*.image
