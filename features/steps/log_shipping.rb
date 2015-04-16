@@ -12,7 +12,7 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
 
   step 'a user logs in' do
     @machine.ssh
-    sleep 1
+    sleep 2
   end
 
   step 'an audit record is created' do
