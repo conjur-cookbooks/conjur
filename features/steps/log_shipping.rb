@@ -7,15 +7,31 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
     @machine.configure
     @conjur = MockConjur.new
     @machine.launch @conjur.id
-    sleep 3 # to settle
   end
 
   step 'a user logs in' do
-    @machine.ssh
-    sleep 3
+    keep_trying do
+      @machine.ssh
+    end
   end
 
   step 'an audit record is created' do
-    expect(@conjur.audits).to include include 'action' => 'login'
+    keep_trying do
+      expect(@conjur.audits).to include include 'action' => 'login'
+    end
+  end
+
+  # tries the block once a second up to max_tries
+  def keep_trying max_tries = 5
+    loop do
+      begin
+        yield
+        break
+      rescue Exception
+        max_tries -= 1
+        sleep 1
+        raise if max_tries == 0
+      end
+    end
   end
 end
