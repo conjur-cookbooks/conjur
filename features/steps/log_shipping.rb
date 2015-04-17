@@ -22,7 +22,7 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
   end
 
   # tries the block once a second up to max_tries
-  def keep_trying max_tries = 60
+  def keep_trying max_tries = 5
     loop do
       begin
         yield

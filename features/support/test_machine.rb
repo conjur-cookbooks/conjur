@@ -14,7 +14,8 @@ class TestMachine
       'Image' => @image.id
     @container.start \
       'PublishAllPorts' => true,
-      'Links' => [[conjur, 'conjur'].join(':')]
+      'Links' => [[conjur, 'conjur'].join(':')],
+      'SecurityOpts' => ['apparmor:unconfined'] # otherwise upstart breaks
 
     ObjectSpace.define_finalizer self, proc { @container.delete force: true }
 

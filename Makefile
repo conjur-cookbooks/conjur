@@ -1,7 +1,7 @@
 .PHONY: rubocop foodcritic rspec kitchen acceptance spinach
 
 COOKBOOK_DIRS = attributes files libraries recipes templates
-PLATFORMS = phusion
+PLATFORMS = trusty phusion
 
 acceptance: spinach rspec
 
