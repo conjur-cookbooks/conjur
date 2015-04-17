@@ -10,8 +10,9 @@
 .SECONDARY: phusion-base.image trusty-base.image
 
 NAME = conjurinc/conjur-cookbook-test-$*
+TEMP_DOCKER_FILE = Dockerfile.$*
 %.image: Dockerfile %-base.image cookbooks.tar.gz conjur.conf
-	cat $< | sed -e 's@<base>@$(NAME)-base@' > Dockerfile.tmp
-	docker build -f Dockerfile.tmp -t $(NAME) .
+	cat $< | sed -e 's@<base>@$(NAME)-base@' > $(TEMP_DOCKER_FILE)
+	docker build -f $(TEMP_DOCKER_FILE) -t $(NAME) .
 	docker inspect -f '{{.Id}}' $(NAME) > $@
-	rm Dockerfile.tmp
+	rm $(TEMP_DOCKER_FILE)
