@@ -20,6 +20,7 @@ idle_timelimit 60
 
 # The search base that will be used for all queries.
 base ou=user,host=<%= @host_id %>,account=<%= @account %>,o=conjur
+base group ou=group,host=<%= @host_id %>,account=<%= @account %>,o=conjur
 
 # The LDAP protocol version to use.
 # ldap_version 3
