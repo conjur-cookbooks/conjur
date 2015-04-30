@@ -2,7 +2,7 @@
 libnss-ldapd    libnss-ldapd/clean_nsswitch     boolean false
 # Name services to configure:
 # Choices: aliases, ethers, group, hosts, netgroup, networks, passwd, protocols, rpc, services, shadow
-libnss-ldapd    libnss-ldapd/nsswitch   multiselect     passwd, shadow
+libnss-ldapd    libnss-ldapd/nsswitch   multiselect     passwd, shadow, group
 # Enable shadow lookups through NSS?
 libpam-ldapd    libpam-ldapd/enable_shadow      boolean true
 # PAM profiles to enable:
