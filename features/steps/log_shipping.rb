@@ -3,10 +3,11 @@ require 'rspec/expectations'
 # Step definition for the log shipping feature.
 class Spinach::Features::LogShipping < Spinach::FeatureSteps
   step 'a configured machine' do
-    @machine = TestMachine.new
-    @machine.configure
-    @conjur = MockConjur.new
-    @machine.launch @conjur.id
+    keep_trying 1 do
+      @machine ||= TestMachine.new.tap(&:configure)
+      @conjur ||= MockConjur.new
+      @machine.launch @conjur.id
+    end
   end
 
   step 'a user logs in' do
