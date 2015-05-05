@@ -4,6 +4,11 @@ describe group('conjur') do
   it { should exist }
 end
 
+describe file('/etc/nsswitch.conf') do
+  its(:content) { should match(/^passwd\:\s+compat ldap$/)}
+  its(:content) { should match(/^group\:\s+compat ldap$/)}
+end
+
 describe user('authkeylookup') do
   it { should exist }
 end
