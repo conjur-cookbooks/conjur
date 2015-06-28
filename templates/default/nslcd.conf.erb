@@ -15,8 +15,11 @@ uri  <%= @uri %>
 
 # nslcd tries to reuse LDAP connection forever, 
 # but requests start ending up with "unknown error" soon 
-# Regular enforced re-connection solves this issue
-idle_timelimit 60
+# Regular enforced re-connection solves this issue.
+# Since the timer is reset each time a request comes in, 
+# 60 seconds won't work here; put a small limit so
+# it reconnects often.
+idle_timelimit 1
 
 # The search base that will be used for all queries.
 base ou=user,host=<%= @host_id %>,account=<%= @account %>,o=conjur
