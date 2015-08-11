@@ -67,7 +67,7 @@ template "/etc/nslcd.conf" do
 end
 
 template "/usr/local/bin/conjur_authorized_keys" do
-  curl_options = []
+  curl_options = ["--connect-timeout 2"]
   curl_options << "--cacert #{conjur_cacertfile}" if conjur_cacertfile
   
   source "conjur_authorized_keys.sh.erb"
