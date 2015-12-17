@@ -2,23 +2,24 @@
 
 COOKBOOK_DIRS = attributes files libraries recipes templates
 PLATFORMS = trusty phusion
+CHEF_EXEC=$(if $(shell which chef > /dev/null),chef exec,)
 
 acceptance: spinach rspec
 
 rubocop:
-	chef exec rubocop --require rubocop/formatter/checkstyle_formatter --format RuboCop::Formatter::CheckstyleFormatter --no-color --out rubocop.xml
+	$(CHEF_EXEC) rubocop --require rubocop/formatter/checkstyle_formatter --format RuboCop::Formatter::CheckstyleFormatter --no-color --out rubocop.xml
 
 foodcritic:
-	chef exec foodcritic .
+	$(CHEF_EXEC) foodcritic .
 
 rspec:
-	chef exec rspec spec/
+	$(CHEF_EXEC) rspec spec/
 
 kitchen:
-	conjur env run -- chef exec kitchen test -d always -c 3
+	conjur env run -- $(CHEF_EXEC) kitchen test -d always -c 3
 
 docker/cookbooks.tar.gz: Berksfile $(COOKBOOK_DIRS)
-	chef exec berks package $@
+	$(CHEF_EXEC) berks package $@
 
 spinach: $(addprefix features/reports/, $(PLATFORMS))
 

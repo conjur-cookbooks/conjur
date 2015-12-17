@@ -16,7 +16,7 @@ end
 
 yum_repository 'conjur' do
   description 'Conjur Inc.'
-  baseurl 'http://yum.conjur.s3-website-us-east-1.amazonaws.com'
+  baseurl 'https://s3.amazonaws.com/yum.conjur/el/$releasever'
   gpgkey 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Conjur'
 end
 
