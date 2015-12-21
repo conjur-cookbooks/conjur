@@ -10,11 +10,14 @@ end
 
 desc "Package cookbooks into a chef-solo tarball"
 task :package => :vendor do
+  `rm -rf vendor/cookbooks/conjur`
   `mkdir -p vendor/cookbooks/conjur`
-  `cp -r metadata.rb Berksfile Berksfile.lock CHANGELOG.md chefignore README.md attributes recipes spec vendor/cookbooks/conjur`
-  version=`git describe --tags`.strip
+  `cp -r metadata.rb Berksfile Berksfile.lock CHANGELOG.md chefignore \
+    README.md attributes recipes files templates libraries \
+  vendor/cookbooks/conjur`
+  version=`git describe --tags --dirty`.strip
   Dir.chdir 'vendor'
   tarball = "conjur-#{version}.tar.gz"
   puts "Building cookbook tarball #{tarball}"
-  `tar czf ../#{tarball} cookbooks`
+  `tar czv --numeric-owner --owner=0 --group=root --mode=og+r -f ../#{tarball} cookbooks`
 end
