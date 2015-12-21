@@ -9,6 +9,8 @@ module ConjurDetect
   def self.detect_init
     if test 'x', '/sbin/runit'
       'runit'
+    elsif test 'x', '/usr/bin/systemctl'
+      'systemd'
     else
       'upstart'
     end
