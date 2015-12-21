@@ -1,0 +1,13 @@
+[Unit]
+Description=Conjur log shipping service
+Documentation=https://developer.conjur.net
+RequiresOverridable=rsyslog.service
+
+[Service]
+ExecStart=/usr/sbin/logshipper -n /var/run/logshipper
+Restart=always
+User=logshipper
+Group=conjur
+
+[Install]
+WantedBy=rsyslog.target
