@@ -1,3 +1,7 @@
+# 0.3.1
+
+* Fix Amazon Linux support
+
 # 0.3.0
 
 * Systemd support
