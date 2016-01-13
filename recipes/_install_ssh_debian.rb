@@ -11,10 +11,21 @@ end
 
 execute "debconf-set-selections /tmp/ldap.seed"
 
-for pkg in %w(debconf nss-updatedb nscd libpam-mkhomedir auth-client-config ldap-utils ldap-client libpam-ldapd libnss-ldapd)
-  package pkg do
-    options "-qq"
-  end
+case node['platform']
+  when 'ubuntu'
+    for pkg in %w(debconf nss-updatedb nscd libpam-mkhomedir auth-client-config ldap-utils ldap-client libpam-ldapd libnss-ldapd)
+      package pkg do
+        options "-qq"
+      end
+    end
+  when 'debian'
+    for pkg in %w(debconf nss-updatedb nscd libpam-mkhomedir ldap-utils ldap-client libpam-ldapd libnss-ldapd )
+      package pkg do
+        options "-qq"
+      end
+    end
+  else
+    raise "Unsupported platform : #{node['platform']}"
 end
 
 execute "pam-auth-update" do
