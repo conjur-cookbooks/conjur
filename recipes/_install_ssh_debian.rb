@@ -15,9 +15,6 @@ pkgs = %w(debconf nss-updatedb nscd libpam-mkhomedir ldap-utils ldap-client libp
 if node['platform'] == 'ubuntu'
   pkgs << 'auth-client-config'
 end
-if node['platform'] == 'debian'
-  pkgs << 'upstart'
-end
 for pkg in pkgs
       package pkg do
         options "-qq"
