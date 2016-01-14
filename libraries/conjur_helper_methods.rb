@@ -7,6 +7,7 @@ end
 # Helper methods to detect stuff
 module ConjurDetect
   def self.detect_init
+    puts "self.class: #{self.class}"
     if test 'x', '/sbin/runit'
       'runit'
     elsif test 'x', '/usr/bin/systemctl'
