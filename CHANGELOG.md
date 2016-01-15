@@ -1,3 +1,7 @@
+# 0.3.3
+
+* Correctly detect systemd on Debian
+
 # 0.3.2
 
 * Fix for debian (don't install ubuntu-specific package)
