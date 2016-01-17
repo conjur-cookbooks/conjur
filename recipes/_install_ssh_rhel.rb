@@ -1,10 +1,3 @@
-# amazon linux uses 'current' as $releasever
-# but packages from EL7 work on it.
-# CentOS and RHEL actually have '6' or '7' in the variable.
-releasever = {
-  'amazon' => '7'
-}[node.platform] || '$releasever'
-
 package_list=%w(nscd openldap openldap-clients nss-pam-ldapd authconfig openssl-perl policycoreutils-python oddjob)
 package_list << "oddjob-mkhomedir" if Chef::VersionConstraint.new('~> 7.0').include?(node['platform_version'])
 
@@ -23,6 +16,13 @@ cookbook_file '/etc/pki/rpm-gpg/RPM-GPG-KEY-Conjur' do
   mode '644'
   source 'apt.key'
 end
+
+# amazon linux uses 'current' as $releasever
+# but packages from EL7 work on it.
+# CentOS and RHEL actually have '6' or '7' in the variable.
+releasever = {
+  'amazon' => '7'
+}[node.platform] || '$releasever'
 
 yum_repository 'conjur' do
   description 'Conjur Inc.'
