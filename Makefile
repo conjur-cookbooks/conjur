@@ -2,7 +2,7 @@
 
 COOKBOOK_DIRS = attributes files libraries recipes templates
 PLATFORMS = trusty phusion
-CHEF_EXEC=$(if $(shell which chef > /dev/null),chef exec,)
+CHEF_EXEC=$(if $(shell which chef > /dev/null 2>&1),chef exec,)
 
 acceptance: spinach rspec
 
