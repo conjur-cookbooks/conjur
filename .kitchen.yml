@@ -25,6 +25,11 @@ platforms:
       image_id: ami-9eaa1cf6
     transport:
       username: ubuntu
+  - name: rhel-7.2
+    driver:
+      image_id: ami-2051294a
+    transport:
+      username: ec2-user
 
 suites:
   - name: default
