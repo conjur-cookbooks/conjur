@@ -1,15 +1,15 @@
 ---
 driver:
   name: ec2
-  aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
-  aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   aws_ssh_key_id: test-kitchen
-  ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
   region: us-east-1
-  flavor_id: m3.medium
+  instance_type: m3.medium
   security_group_ids: sg-7c6eef16
-  ssh_timeout: 10
-  ssh_retries: 5
+
+transport:
+  connection_timeout: 10
+  connection_retries: 5
+  ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
 
 driver_config:
   privileged: true
@@ -23,6 +23,7 @@ platforms:
   - name: ubuntu-14.04
     driver:
       image_id: ami-9eaa1cf6
+    transport:
       username: ubuntu
 
 suites:
