@@ -1,9 +1,9 @@
-package_list = %w(nscd openldap openldap-clients nss-pam-ldapd authconfig policycoreutils-python oddjob)
+package_list = %w(nscd openldap openldap-clients nss-pam-ldapd authconfig policycoreutils-python)
 
 if node.platform == 'redhat'
   if Chef::VersionConstraint.new('~> 7.0').include?(node['platform_version'])
     # this is needed for mkhomedir to work on rhel
-    package_list << "oddjob-mkhomedir"
+    package_list += %w(oddjob oddjob-mkhomedir)
 
     # this package doesn't exist anymore on rhel 7
     package_list -= 'openssl-perl'
