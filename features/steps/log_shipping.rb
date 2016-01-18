@@ -11,6 +11,7 @@ class Spinach::Features::LogShipping < Spinach::FeatureSteps
   end
 
   step 'a user logs in' do
+    sleep 1 # give a moment to settle
     keep_trying do
       @machine.ssh
     end
