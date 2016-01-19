@@ -8,16 +8,14 @@ package_list = %W(
   oddjob
 )
 
-if node.platform == 'redhat'
-  if Chef::VersionConstraint.new('~> 7.0').include?(node['platform_version'])
-    # this is needed for mkhomedir to work on rhel 7
-    package_list << 'oddjob-mkhomedir'
-
-    # this package doesn't exist anymore on rhel 7 in
-    # the main repo and doesn't appear to be required
-    # TODO: figure out if it can be removed altogether
-    package_list -= ['openssl-perl']
-  end
+if Chef::VersionConstraint.new('~> 7.0').include?(node['platform_version'])
+  # this is needed for mkhomedir to work on rhel 7 and variants
+  package_list << 'oddjob-mkhomedir'
+  
+  # this package doesn't exist anymore on rhel 7 in
+  # the main repo and doesn't appear to be required
+  # TODO: figure out if it can be removed altogether
+  package_list -= ['openssl-perl']
 end
 
 package_list.each do |pkg|
