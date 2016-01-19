@@ -64,13 +64,13 @@ ruby_block "Configure sshd with AuthorizedKeysCommand" do
     edit = Chef::Util::FileEdit.new('/etc/ssh/sshd_config')
 
     edit.insert_line_after_match(/#?AuthorizedKeysFile/, <<-CMD)
-AuthorizedKeysCommand /usr/local/bin/conjur_authorized_keys
+AuthorizedKeysCommand /opt/conjur/bin/conjur_authorized_keys
 #{run_as_option} authkeylookup
     CMD
     edit.write_file
     Chef::Log.info "Wrote AuthorizedKeysCommand into sshd_config"
   end
   # Need this so the lines don't get inserted multiple times
-  not_if { File.read('/etc/ssh/sshd_config').index('AuthorizedKeysCommand /usr/local/bin/conjur_authorized_keys') }
+  not_if { File.read('/etc/ssh/sshd_config').index('AuthorizedKeysCommand /opt/conjur/bin/conjur_authorized_keys') }
   notifies :restart, "service[#{node['sshd_service']['service']}]"
 end

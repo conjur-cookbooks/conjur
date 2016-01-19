@@ -24,9 +24,9 @@ describe group('users') do
 end
 
 describe package("debconf"), :if => os[:family] == 'debian' do
-  it { should exist }
+  it { should be_installed }
 end
 
 describe package("nss-pam-ldapd"), :if => os[:family] == 'rhel' do
-  it { should exist }
+  it { should be_installed }
 end

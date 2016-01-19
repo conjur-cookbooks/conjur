@@ -1,10 +1,9 @@
 ---
 driver:
   name: ec2
-  aws_ssh_key_id: test-kitchen
+  aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_ID'] %>
   region: us-east-1
   instance_type: m3.medium
-  security_group_ids: sg-7c6eef16
 
 transport:
   connection_timeout: 10
@@ -30,6 +29,11 @@ platforms:
       image_id: ami-2051294a
     transport:
       username: ec2-user
+  - name: debian-8
+    driver:
+      image_id: ami-8b9a63e0
+    transport:
+      username: admin
 
 suites:
   - name: default

@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+
+# net-ssh v3 needs ruby 2, but Chef v11 still uses 1.9.3 . Pin it
+# until we upgrade Chef (at which point we may be able to get rid of
+# this Gemfile altogether).
+gem 'net-ssh', '~> 2.7'
+gem 'serverspec', '~> 2.25.0'
+
