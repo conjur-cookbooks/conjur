@@ -13,7 +13,7 @@ foodcritic:
 	$(CHEF_EXEC) foodcritic .
 
 rspec:
-	$(CHEF_EXEC) rspec spec/
+	$(CHEF_EXEC) rspec --format RspecJunitFormatter --out spec/report.xml spec/
 
 kitchen:
 	conjur env run -- $(CHEF_EXEC) kitchen test -d always -c 3

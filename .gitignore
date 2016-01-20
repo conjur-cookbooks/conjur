@@ -23,3 +23,5 @@ cookbooks.tar.gz
 docker/*.image
 
 features/reports
+vendor/
+spec/report.xml

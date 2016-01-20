@@ -39,7 +39,7 @@ end
 # CentOS and RHEL actually have '6' or '7' in the variable.
 releasever = {
   'amazon' => '7'
-}[node.platform] || '$releasever'
+}[node['platform']] || '$releasever'
 
 yum_repository 'conjur' do
   description 'Conjur Inc.'

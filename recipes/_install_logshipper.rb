@@ -22,8 +22,8 @@ bash "mkfifo #{logshipper_fifo_path}" do
     [
       s.pipe?,
       (s.mode & 0777 == 0460),
-      s.uid == node.etc.passwd.logshipper.uid,
-      s.gid == node.etc.group[fifo_group].gid,
+      s.uid == node['etc']['passwd']['logshipper'].uid,
+      s.gid == node['etc']['group'][fifo_group].gid,
     ].all?
   rescue Errno::ENOENT, NoMethodError
     false
@@ -36,8 +36,8 @@ bash "mkfifo #{logshipper_fifo_path}" do
   """
   
   # we need to restart as the pipe has moved
-  notifies :restart, 'service[logshipper]', :delayed if node.conjur.service_provider == "upstart"
-  notifies :restart, 'service[syslog]', :delayed if node.conjur.service_provider == "upstart"
+  notifies :restart, 'service[logshipper]', :delayed if node['conjur']['service_provider'] == "upstart"
+  notifies :restart, 'service[syslog]', :delayed if node['conjur']['service_provider'] == "upstart"
 end
 
 file "/var/log/logshipper.log" do
