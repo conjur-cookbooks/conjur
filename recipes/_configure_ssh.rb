@@ -66,7 +66,15 @@ template "/etc/nslcd.conf" do
   notifies :restart, "service[nslcd]"
 end
 
-template "/usr/local/bin/conjur_authorized_keys" do
+%w[ /opt /opt/conjur /opt/conjur/bin ].each do |d|
+  directory d do
+    owner 'root'
+    group 'root'
+    mode '0755'
+  end
+end
+
+template "/opt/conjur/bin/conjur_authorized_keys" do
   curl_options = ["--connect-timeout 2"]
   curl_options << "--cacert #{conjur_cacertfile}" if conjur_cacertfile
   

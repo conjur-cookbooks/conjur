@@ -48,7 +48,7 @@ describe "conjur::configure" do
     )
   end
   it "creates conjur_authorized_keys" do
-    expect(subject).to create_template("/usr/local/bin/conjur_authorized_keys") { |params|
+    expect(subject).to create_template("/opt/conjur/bin/conjur_authorized_keys") { |params|
       expect(params[:variables]).to eq({
         uri: "https://conjur/api/pubkeys",
         options: including("--cacert /etc/conjur-demo.pem")
