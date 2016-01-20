@@ -1,11 +1,13 @@
 #!/bin/bash -ex
 
-bundle install --path vendor/bundle
+docker build -t ci-conjur-cookbook -f ci/Dockerfile .
 
-bundle exec make rubocop || true
+docker run -it --rm ci-conjur-cookbook bundle exec make rubocop || true
 
 # chef exec make -j spinach # fails undeterministically
 
-chef exec make -j rspec
+chef exec make rspec
 
-chef exec make -j foodcritic kitchen
+chef exec make foodcritic
+
+# chef exec make kitchen
