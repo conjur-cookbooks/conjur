@@ -1,3 +1,8 @@
+# 0.3.4
+
+* Fix login on Debian
+* Install `conjur_authorized_keys` in `/opt/conjur/bin` instead of `/usr/local/bin`
+
 # 0.3.3
 
 * Correctly detect systemd on Debian
