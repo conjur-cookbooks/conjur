@@ -1,3 +1,5 @@
+jenkins.sh
 .bundle/
 vendor/
-
+ci/output
+!ci/output/cookbooks.tar.gz

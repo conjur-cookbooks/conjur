@@ -14,6 +14,6 @@ file "/etc/conjur.identity" do
 machine #{conjur_appliance_url}/authn
     login host/#{conjur_host_id}
     password #{conjur_host_api_key}
-  """
-  notifies :restart, 'service[logshipper]', :delayed if node['conjur']['service_provider'] == "upstart"
+"""
+  notifies(:restart, 'service[logshipper]', :delayed) if node['conjur']['service_provider'] == "upstart"
 end

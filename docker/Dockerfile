@@ -1,10 +1,22 @@
-FROM <base>
+FROM ruby:2.1
+MAINTAINER Conjur, Inc
 
-ADD id_rsa.pub /tmp/key.pub
-RUN mkdir -p /root/.ssh && cat /tmp/key.pub >> /root/.ssh/authorized_keys && rm -f /tmp/key.pub
-EXPOSE 22
+WORKDIR /src
 
-ADD conjur.conf /etc/
+RUN curl -O https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.10.0-1_amd64.deb && \
+  dpkg -i chefdk_0.10.0-1_amd64.deb && \
+  rm chefdk_0.10.0-1_amd64.deb
 
-ADD cookbooks.tar.gz /var/chef
-RUN chef-solo -o conjur::install
+COPY Gemfile Gemfile.lock ./
+RUN chef exec bundle install
+RUN chef exec gem install 'rubocop-checkstyle_formatter'
+
+COPY attributes/ attributes/
+COPY files/ files/
+COPY libraries/ libraries/ 
+COPY recipes/ recipes/ 
+COPY templates/ templates/ 
+COPY distrib/ distrib/
+
+RUN chmod 0600 distrib/id_rsa
+COPY Berksfile Berksfile.lock metadata.rb ./

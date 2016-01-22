@@ -24,3 +24,4 @@ docker/*.image
 features/reports
 vendor/
 spec/report.xml
+ci/output/

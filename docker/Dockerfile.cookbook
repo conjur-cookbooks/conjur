@@ -1,0 +1,5 @@
+FROM ci-conjur-cookbook
+
+RUN mkdir /cookbooks && berks package /cookbooks/conjur.tar.gz
+VOLUME /cookbooks
+

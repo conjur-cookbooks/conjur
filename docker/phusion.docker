@@ -6,3 +6,13 @@ RUN curl -L https://www.chef.io/chef/install.sh | sudo bash - /dev/stdin -v $CHE
 
 # enable ssh
 RUN rm -f /etc/service/sshd/down
+
+ADD distrib/id_rsa.pub /tmp/key.pub
+RUN mkdir -p /root/.ssh && cat /tmp/key.pub >> /root/.ssh/authorized_keys && rm -f /tmp/key.pub
+EXPOSE 22
+
+ADD ci/output/cookbooks.tar.gz /var/chef/.
+
+RUN chef-solo -o conjur::install
+
+COPY distrib/conjur.conf /etc/conjur.conf

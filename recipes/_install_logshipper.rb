@@ -33,11 +33,11 @@ bash "mkfifo #{logshipper_fifo_path}" do
     rm -f #{logshipper_fifo_path}
     mkfifo --mode=0460 #{logshipper_fifo_path}
     chown logshipper:#{fifo_group} #{logshipper_fifo_path}
-  """
+"""
   
   # we need to restart as the pipe has moved
-  notifies :restart, 'service[logshipper]', :delayed if node['conjur']['service_provider'] == "upstart"
-  notifies :restart, 'service[syslog]', :delayed if node['conjur']['service_provider'] == "upstart"
+  notifies(:restart, 'service[logshipper]', :delayed) if node['conjur']['service_provider'] == "upstart"
+  notifies(:restart, 'service[syslog]', :delayed) if node['conjur']['service_provider'] == "upstart"
 end
 
 file "/var/log/logshipper.log" do

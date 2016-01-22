@@ -6,10 +6,11 @@ require 'net/ssh'
 # container with preinstalled cookbook and conjur config.
 class TestMachine
   def initialize
-    @image = TestMachine.trusted_image
+    #@image = TestMachine.trusted_image
   end
 
   def launch conjur
+=begin
     @container = Docker::Container.create \
       'Image' => @image.id
     @container.start \
@@ -20,25 +21,39 @@ class TestMachine
     ObjectSpace.define_finalizer self, proc { @container.delete force: true }
 
     # this is needed to refresh info
-    @container = Docker::Container.get @container.id
+    @container.refresh!
+=end
   end
 
   def ssh
-    Net::SSH.start 'localhost', 'root',
+    Net::SSH.start 'test-host', 'root',
         port: ssh_port, keys: [TestMachine.key_file], config: false do |ssh|
       ssh.exec! 'id'
     end
   end
 
   def ssh_port
-    @container.info['NetworkSettings']['Ports']['22/tcp'][0]['HostPort']
+    #ports = @container.info['NetworkSettings']['Ports']
+    #ports['22/tcp'][0]['HostPort'] if ports
+    22
   end
 
+=begin
   def configure
     @image = TestMachine.configured_image
   end
+=end
 
   class << self
+    def root_directory
+      @root ||= File.expand_path '../../..', __FILE__
+    end
+
+    def key_file
+      '/src/distrib/id_rsa'
+    end
+
+=begin
     def configured_image
       @configured_image ||= begin
         container = Docker::Container.create \
@@ -51,20 +66,12 @@ class TestMachine
     def trusted_image
       @image ||= ENV['TRUSTED_IMAGE'].tap do |image|
         fail 'Please set TRUSTED_IMAGE to image name' unless image
-        fail "Image #{image} doesn't exist. Have you ran `make`?" unless Docker::Image.exist? image
+        # fail "Image #{image} doesn't exist. Have you ran make?" unless Docker::Image.exist? image
       end
     end
 
     def base_command
       @base_command ||= Docker::Image.get(trusted_image).info['Config']['Cmd']
-    end
-
-    def root_directory
-      @root ||= File.expand_path '../../..', __FILE__
-    end
-
-    def key_file
-      File.expand_path '../../../docker/id_rsa', __FILE__
     end
 
     private
@@ -87,5 +94,6 @@ class TestMachine
           CONJUR_AUTHN_API_KEY=the-secret-key
         )
     end
+=end
   end
 end
