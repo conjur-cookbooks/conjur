@@ -4,7 +4,6 @@ rubocop.xml
 cookbooks
 .vendor
 .vagrant
-Berksfile.lock
 *~
 *#
 .#*
