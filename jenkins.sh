@@ -25,7 +25,7 @@ build_ci_containers() {
     # Take advantage of the docker layer cache to work around the fact
     # that berks package isn't idempotent.
     docker build -t ci-cookbook-storage -f docker/Dockerfile.cookbook .
-    docker run -i --rm ci-cookbook-storage cat /cookbooks/conjur.tar.gz > ci/output/cookbooks.tar.gz
+    docker run -i --rm ci-cookbook-storage bash -c 'rm -f /src/output/cookbooks.tar.gz && cat /cookbooks/conjur.tar.gz' > ci/output/cookbooks.tar.gz
 
     # docker run -i --rm -v $PWD/ci/output:/src/output ci-conjur-cookbook berks package /src/output/cookbooks.tar.gz
 }
@@ -52,8 +52,6 @@ test_platforms() {
   cert_file=conjur-cucumber.pem
   cert=$ci_output/$cert_file
   docker exec -i $conjur_cid cat /opt/conjur/etc/ssl/conjur.pem > $cert
-
-
 
   for p in $platforms; do
     host_json=$(docker run -i --rm --link $conjur_cid:conjur \
