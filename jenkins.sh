@@ -45,11 +45,11 @@ test_platforms() {
   conjur_image=registry.tld/conjur-appliance-cuke-master:4.6-stable
   docker pull $conjur_image
 
-  conjur_cid=$(docker run -d $conjur_image)
+  conjur_cid=$(docker run -d -v $output $conjur_image)
   docker run --rm --link $conjur_cid:conjur $conjur_image /opt/conjur/evoke/bin/wait_for_conjur
   cert_file=conjur-cucumber.pem
   cert=$ci_output/$cert_file
-  docker exec -i $conjur_cid cat /opt/conjur/etc/ssl/conjur.pem > $cert
+  docker exec -i $conjur_cid bash -c "cat /opt/conjur/etc/ssl/conjur.pem > /src/output/$cert_file"
 
   for p in $platforms; do
     host_json=$(docker run -i --rm --link $conjur_cid:conjur \
