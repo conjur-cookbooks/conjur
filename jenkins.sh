@@ -101,10 +101,10 @@ test_platforms() {
 }
 
 run_tests() {
-  # docker run -i --rm -v "$output" -v $PWD/spec:/src/spec ci-conjur-cookbook chef exec rspec --format RspecJunitFormatter --out $src_output/spec/report.xml spec/ || true
+  docker run -i --rm -v "$output" -v $PWD/spec:/src/spec ci-conjur-cookbook chef exec rspec --format RspecJunitFormatter --out $src_output/spec/report.xml spec/ || true
 
   test_platforms
-  # conjur env run -- chef exec kitchen test -d always -c 3
+  conjur env run -- chef exec kitchen test -d always -c 3
 }
 
 clean_output
