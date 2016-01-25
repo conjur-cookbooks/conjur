@@ -101,9 +101,13 @@ test_platforms() {
 }
 
 run_tests() {
-  docker run -i --rm -v "$output" -v $PWD/spec:/src/spec ci-conjur-cookbook chef exec rspec --format RspecJunitFormatter --out $src_output/spec/report.xml spec/ || true
+  docker run -i --rm -v "$output" -v $PWD/spec:/src/spec ci-conjur-cookbook chef exec rspec --format RspecJunitFormatter --out /src/spec/report.xml spec/ || true
 
   test_platforms
+
+  # There doesn't currently appear to be an easy way to retrieve
+  # results from test-kitchen. So, use the the return code here to
+  # fail the build if these tests fail.
   conjur env run -- chef exec kitchen test -d always -c 3
 }
 

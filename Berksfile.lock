@@ -5,7 +5,7 @@ DEPENDENCIES
 
 GRAPH
   apt (2.9.2)
-  conjur (0.3.3)
+  conjur (0.3.4)
     apt (>= 0.0.0)
     sshd-service (>= 0.0.0)
     yum (>= 0.0.0)
