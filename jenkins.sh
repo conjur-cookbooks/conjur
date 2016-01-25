@@ -82,7 +82,7 @@ test_platforms() {
 
     docker exec -i  $name chef-solo -o conjur::configure
 
-    docker run -it --rm \
+    docker run -i --rm \
       --link $conjur_cid:conjur \
       --link $name:test-host \
       -v $PWD/features:/src/features \
