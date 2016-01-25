@@ -25,9 +25,7 @@ build_ci_containers() {
     # Take advantage of the docker layer cache to work around the fact
     # that berks package isn't idempotent.
     docker build -t ci-cookbook-storage -f docker/Dockerfile.cookbook .
-    docker run -i --rm ci-cookbook-storage bash -c 'rm -f /src/output/cookbooks.tar.gz && cat /cookbooks/conjur.tar.gz' > ci/output/cookbooks.tar.gz
-
-    # docker run -i --rm -v $PWD/ci/output:/src/output ci-conjur-cookbook berks package /src/output/cookbooks.tar.gz
+    docker run -i --rm -v "$output" ci-cookbook-storage bash -c 'mkdir -p /src/output && mv /cookbooks/conjur.tar.gz /src/output/cookbooks.tar.gz'
 }
 
 build_platforms() {
@@ -96,6 +94,7 @@ test_platforms() {
       -e CONJUR_AUTHN_LOGIN=admin \
       -e CONJUR_AUTHN_API_KEY=secret \
       -e HOST_RESOURCE=$host_name \
+      -e CI_REPORTS=features/reports/$p \
       ci-conjur-cookbook chef exec spinach -r double_reporter || true
   done
   
