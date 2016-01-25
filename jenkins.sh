@@ -107,7 +107,7 @@ run_tests() {
   # There doesn't currently appear to be an easy way to retrieve
   # results from test-kitchen. So, use the the return code here to
   # fail the build if these tests fail.
-  # conjur env run -- chef exec kitchen test -d always -c 3
+  conjur env run -- chef exec kitchen test -d always -c 3
 }
 
 clean_output
