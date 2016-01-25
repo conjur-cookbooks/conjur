@@ -11,7 +11,6 @@ finish() {
     docker rm -f conjur-cookbook-test-$p-$$
   done
   docker rm -f $conjur_cid
-  rm -f $cert
 }
 trap finish EXIT
 
