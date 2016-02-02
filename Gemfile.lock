@@ -1,7 +1,33 @@
+GIT
+  remote: https://github.com/conjurinc/api-ruby.git
+  revision: 937387fca8380a54047c56b6384f26bf795495aa
+  branch: master
+  specs:
+    conjur-api (4.20.0)
+      activesupport
+      rest-client (~> 1.7, >= 1.7.3)
+      semantic
+
+GIT
+  remote: https://github.com/conjurinc/cli-ruby.git
+  revision: 06c154fc3e6c19df22ccb4742e31adb1d138fae2
+  branch: master
+  specs:
+    conjur-cli (4.29.1)
+      activesupport
+      cas_rest_client
+      conjur-api (~> 4.20)
+      deep_merge
+      gli (>= 2.8.0)
+      highline
+      methadone
+      netrc (~> 0.10.2)
+      xdg
+
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (4.2.5)
+    activesupport (4.2.5.1)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -54,25 +80,12 @@ GEM
       spinach (~> 0.8.7)
     coderay (1.1.0)
     colorize (0.7.7)
-    conjur-api (4.19.1)
-      activesupport
-      rest-client (~> 1.7, >= 1.7.3)
-    conjur-cli (4.28.2)
-      activesupport
-      cas_rest_client
-      conjur-api (~> 4.19)
-      deep_merge
-      gli (>= 2.8.0)
-      highline
-      methadone
-      netrc (~> 0.10.2)
-      xdg
     deep_merge (1.0.1)
     diff-lcs (1.2.5)
-    docker-api (1.25.0)
+    docker-api (1.26.0)
       excon (>= 0.38.0)
       json
-    domain_name (0.5.25)
+    domain_name (0.5.20160128)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     excon (0.45.4)
@@ -95,7 +108,7 @@ GEM
       bundler
     method_source (0.8.2)
     mime-types (2.99)
-    minitest (5.8.3)
+    minitest (5.8.4)
     mixlib-authentication (1.4.0)
       mixlib-log
       rspec-core (~> 3.2)
@@ -116,7 +129,7 @@ GEM
       net-ssh-gateway (>= 1.2.0)
     net-telnet (0.1.1)
     netrc (0.10.3)
-    ohai (8.8.1)
+    ohai (8.9.0)
       chef-config (>= 12.5.0.alpha.1, < 13)
       ffi (~> 1.9)
       ffi-yajl (~> 2.2)
@@ -144,7 +157,7 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.1)
+    rspec-core (3.4.2)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -159,6 +172,7 @@ GEM
     rspec_junit_formatter (0.2.3)
       builder (< 4)
       rspec-core (>= 2, < 4, != 2.12.0)
+    semantic (1.4.1)
     serverspec (2.29.1)
       multi_json
       rspec (~> 3.0)
@@ -166,7 +180,7 @@ GEM
       specinfra (~> 2.48)
     sfl (2.2)
     slop (3.6.0)
-    specinfra (2.50.2)
+    specinfra (2.50.3)
       net-scp
       net-ssh (>= 2.7, < 3.1)
       net-telnet
@@ -193,7 +207,8 @@ PLATFORMS
 DEPENDENCIES
   chefspec
   ci_reporter_spinach
-  conjur-cli (~> 4.28)
+  conjur-api!
+  conjur-cli!
   docker-api
   net-ssh (~> 2.9)
   netrc

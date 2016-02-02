@@ -12,4 +12,6 @@ gem 'rspec-expectations'
 gem 'rspec-core'
 gem 'rspec_junit_formatter'
 gem 'chefspec'
-gem 'conjur-cli', '~> 4.28'
+gem 'conjur-api', :git => 'https://github.com/conjurinc/api-ruby.git', :branch => 'master'
+gem 'conjur-cli', :git => 'https://github.com/conjurinc/cli-ruby.git', :branch => 'master'
+

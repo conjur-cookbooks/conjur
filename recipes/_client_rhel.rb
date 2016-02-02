@@ -29,4 +29,5 @@ end
 
 rpm_package "conjur" do
   source target_path
+  action :upgrade
 end
