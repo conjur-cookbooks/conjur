@@ -4,10 +4,16 @@ user "logshipper" do
   group "conjur"
 end
 
+service 'logshipper' do
+  action :nothing
+end
+
 service_provider = node['conjur']['service_provider']
+puts "service_provider: #{service_provider}"
 include_recipe "conjur::_install_logshipper_#{service_provider}"
 
 syslog_provider = node['conjur']['syslog_provider']
+puts "syslog_provider: #{syslog_provider}"
 include_recipe "conjur::_install_logshipper_#{syslog_provider}"
 
 if node['etc']['group'].include? 'syslog'
@@ -36,8 +42,16 @@ bash "mkfifo #{logshipper_fifo_path}" do
 """
   
   # we need to restart as the pipe has moved
-  notifies(:restart, 'service[logshipper]', :delayed) if node['conjur']['service_provider'] == "upstart"
-  notifies(:restart, 'service[syslog]', :delayed) if node['conjur']['service_provider'] == "upstart"
+  notifies(:restart, 'service[logshipper]', :delayed)
+  notifies(:restart, 'service[syslog]', :delayed)
+end
+
+
+if node['platform_family'] == 'rhel' && system('/sbin/selinuxenabled')
+  include_recipe 'selinux_policy::install'
+  selinux_policy_fcontext "#{logshipper_fifo_path}" do
+    secontext 'var_log_t'
+  end
 end
 
 file "/var/log/logshipper.log" do

@@ -67,7 +67,7 @@ class CookbookTest
     end
 
     def clean_output
-      setup_step "docker run --rm -v #{output_mount} #{conjur_image} /bin/bash -xc 'rm -rf #{src_output}/*'"
+      setup_step %Q(docker run --rm -v #{output_mount} #{conjur_image} /bin/bash -xc 'rm -rf #{src_output}/#{options[:only]}*')
     end
 
     def build_ci_containers
@@ -93,24 +93,47 @@ class CookbookTest
       [options[:only] || `kitchen list -b`.split("\n")].flatten
     end
 
+    def instance_id_url
+      'http://169.254.169.254/latest/meta-data/instance-id'
+    end
+
     def kitchen_tests
-      conjur_hostid, conjur_addr, token = `ci/start.sh`.split(' ')
+      conjur_hostid, conjur_addr, token, cert = `ci/start.sh`.split(':')
       exit_now! "ci/start.sh failed" unless $?.exitstatus == 0
 
-      debug "conjur hostid: #{conjur_hostid} conjur addr: #{conjur_addr} token: #{token}"
+      debug "conjur_hostid: #{conjur_hostid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
-      setup_step_stream "chef exec kitchen converge #{options[:only]}"
-
-      test_step_stream "chef exec kitchen verify #{options[:only]}"
-
       kitchen_instances.each do |h|
-        setup_step_stream "chef exec kitchen exec #{h} -c 'sudo /tmp/kitchen/data/conjurize.sh #{conjur_addr} #{token}'"
-        host_id = `chef exec kitchen exec #{h} -c "sudo /usr/local/bin/conjur authn whoami" | grep -v 'Execute command on' | jsonfield username | sed 's;host/;;'`
-        exit_now! "conjur authn whoami failed on #{h}" unless $?.exitstatus == 0
-        
-        login_audit = `ci/check_login.sh #{host_id}`
+        setup_step_stream "chef exec kitchen create #{h}"
+        setup_step %Q(chef exec kitchen exec #{h} -c "echo '#{conjur_addr} conjur' | sudo tee -a /etc/hosts >/dev/null")
+
+        hostid = nil
+        # This is kind of gross, but some platforms have curl, and
+        # others have wget. I don't really want to take the hit of an
+        # upt-get update here (which would be required to isntall
+        # curl)
+        setup_step "chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on'" do |out|
+          hostid = out.strip
+        end
+
+        api_key = nil
+        setup_step "ci/create_host.sh #{h} #{token} #{hostid}" do |out|
+          api_key = out.strip
+        end
+
+        env = "env CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
+        setup_step_stream "chef exec #{env} kitchen converge #{h}"
+
+        test_step_stream "chef exec kitchen verify #{h}"
+
+        # setup_step_stream "chef exec kitchen exec #{h} -c 'sudo /tmp/kitchen/data/conjurize.sh #{conjur_addr} #{token}'"
+
+        login_audit = nil 
+        exitstatus = test_step "ci/check_login.sh #{hostid}" do |out|
+          login_audit = out     # don't strip this one, we're just writing to the results
+        end
         File.open("ci/output/#{h}-login.log", 'w') do |log|
-          log.write $?.exitstatus == 0 ? login_audit : "no ssh:login found for #{host_id}"
+          log.write exitstatus == 0 ? login_audit : "no ssh:login found for #{hostid}"
         end
       end
     end

@@ -1,5 +1,4 @@
 service 'syslog' do
-  provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
   service_name 'rsyslog'
 end
 

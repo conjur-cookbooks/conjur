@@ -5,6 +5,8 @@ account=cucumber
 token=$2
 host="ec2/$(curl -s http://169.254.169.254/latest/meta-data/instance-id)"
 
+# apt-get update && apt-get install fail2ban
+
 echo "$appliance_addr cuke-master" >> /etc/hosts
 ssl_cert=$(openssl s_client -connect cuke-master:443 -showcerts </dev/null | awk '/BEGIN CERT/,/END CERT/ {print}' ORS='\\n')
 cat - >/tmp/client.json <<EOF
@@ -39,4 +41,4 @@ cat - >/tmp/identity.json <<EOF
 }
 EOF
 
-chef-solo -c /tmp/kitchen/client.rb -o conjur::identity,conjur::configure -j /tmp/identity.json
+chef-solo -c /tmp/kitchen/client.rb -o conjur::configure -j /tmp/identity.json

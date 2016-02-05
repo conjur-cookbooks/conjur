@@ -16,6 +16,6 @@ conjur host show $hostid 1>&2 || run_conjurize
 
 vagrant ssh -- sudo service nginx restart 1>&2
 
-start_info=$(vagrant ssh -- sudo /vagrant/test_setup.sh)
+start_info=$(vagrant ssh -- sudo /vagrant/_start.sh)
 
-echo "$hostid $start_info"
+echo -n "$hostid:$start_info"

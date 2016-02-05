@@ -42,8 +42,14 @@ suites:
       - recipe[conjur::client]
       - recipe[conjur::conjurrc]
       - recipe[conjur::install]
+      - recipe[conjur::configure]
     attributes:
       conjur:
+        identity:
+          account: cucumber
+          login: <%= ENV['CONJUR_AUTHN_LOGIN'] %>
+          password: <%= ENV['CONJUR_AUTHN_API_KEY'] %>
         configuration:
           account: cucumber
           appliance_url: https://conjur/api
+          ssl_certificate: "<%= ENV['CONJUR_SSL_CERTIFICATE'] %>"
