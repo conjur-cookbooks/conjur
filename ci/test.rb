@@ -98,7 +98,7 @@ class CookbookTest
     end
 
     def kitchen_tests
-      conjur_cid, conjur_hostid, conjur_addr, token, cert = 
+      conjur_cid, conjur_hostid, conjur_addr, conjur_port, token, cert = 
         setup_step %Q(ci/start_conjur.sh).split(':')
       at_exit { cleanup_step "docker rm -f #{conjur_cid} " } unless options[:keep]
 
@@ -118,7 +118,7 @@ class CookbookTest
 
         api_key = setup_step %Q(ci/create_host.sh #{h} #{conjur_cid} #{token} #{hostid}).strip
 
-        env = "env CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
+        env = "env CONJUR_APPLIANCE_URL=https://conjur:#{conjur_port}/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "chef exec #{env} kitchen converge #{h}"
 
         test_step_stream "chef exec kitchen verify #{h}"

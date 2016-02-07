@@ -62,5 +62,5 @@ suites:
           password: <%= ENV['CONJUR_AUTHN_API_KEY'] %>
         configuration:
           account: cucumber
-          appliance_url: https://conjur/api
+          appliance_url: <%= ENV['CONJUR_APPLIANCE_URL'] %>
           ssl_certificate: "<%= ENV['CONJUR_SSL_CERTIFICATE'] %>"
