@@ -1,5 +1,10 @@
+puts "#{node['platform'] == 'centos'} #{ConjurDetect.platform_version?(node, '~>6.0')}"
+
 service 'logshipper' do
   action :nothing
+  if node['platform'] == 'centos' && ConjurDetect.platform_version?(node, '~>6.0')
+    provider Chef::Provider::Service::Upstart
+  end
 end
 
 file "/etc/conjur.identity" do

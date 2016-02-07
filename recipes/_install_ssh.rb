@@ -31,7 +31,7 @@ case node['platform_family']
     raise "Unsupported platform family : #{node['platform_family']}"
 end
 
-if node["platform"] == "centos"
+if node["platform_family"] == "rhel"
   include_recipe 'conjur::_install_selinux'
 end
 

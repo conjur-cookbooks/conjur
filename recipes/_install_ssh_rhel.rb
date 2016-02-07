@@ -8,7 +8,7 @@ package_list = %W(
   oddjob
 )
 
-if Chef::VersionConstraint.new('~> 7.0').include?(node['platform_version'])
+if ConjurDetect.platform_version?(node, '~>7.0')
   # this is needed for mkhomedir to work on rhel 7 and variants
   package_list << 'oddjob-mkhomedir'
   

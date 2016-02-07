@@ -11,8 +11,8 @@ depends "apt"
 depends "yum"
 depends "sshd-service"
 
-depends 'selinux', '~> 0.9'
-depends 'selinux_policy', '~>0.9'
+#depends 'selinux', '~> 0.9'
+#depends 'selinux_policy', '~>0.9'
 
 %w(ubuntu centos amazon debian).each do |platform|
   supports platform

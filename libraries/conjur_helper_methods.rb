@@ -23,6 +23,10 @@ module ConjurDetect
       'rsyslog'
     end
   end
+
+  def self.platform_version?(node, spec)
+    Chef::VersionConstraint.new(spec).include?(node['platform_version'])
+  end
 end
 
 module ConjurHelperMethods

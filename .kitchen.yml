@@ -25,7 +25,7 @@ platforms:
       image_id: ami-9eaa1cf6
     transport:
       username: ubuntu
-  - name: rhel-7.2
+  - name: amazon
     driver:
       image_id: ami-2051294a
     transport:
@@ -35,6 +35,16 @@ platforms:
       image_id: ami-8b9a63e0
     transport:
       username: admin
+  - name: centos-6
+    driver:
+      image_id: ami-bc8131d4
+    transport:
+      username: root
+  - name: centos-7
+    driver:
+      image_id: ami-61bbf104
+    transport:
+      username: centos
 
 suites:
   - name: default

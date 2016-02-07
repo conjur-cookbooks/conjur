@@ -47,13 +47,6 @@ bash "mkfifo #{logshipper_fifo_path}" do
 end
 
 
-if node['platform_family'] == 'rhel' && system('/sbin/selinuxenabled')
-  include_recipe 'selinux_policy::install'
-  selinux_policy_fcontext "#{logshipper_fifo_path}" do
-    secontext 'var_log_t'
-  end
-end
-
 file "/var/log/logshipper.log" do
   owner 'logshipper'
   mode '0640'
