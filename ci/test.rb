@@ -31,7 +31,7 @@ class CookbookTest
     def setup_step cmd, &block
       ret = nil
       sh! cmd do |out|
-        ret = yield out
+        ret = yield out if block_given?
       end
       ret
     end
