@@ -66,10 +66,6 @@ class CookbookTest
       sh_stream! command, options.merge(:nofail => false)
     end
 
-    def cleanup
-      cleanup_step 'kitchen destroy -c'
-
-
     def clean_output
       setup_step %Q(docker run --rm -v #{output_mount} #{conjur_image} /bin/bash -xc 'rm -rf #{src_output}/#{options[:only]}*')
     end
