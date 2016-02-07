@@ -28,7 +28,13 @@ class CookbookTest
     alias_method :test_step, :sh
 
     # If a setup step fails, the build should fail.
-    alias_method :setup_step, :sh!
+    def setup_step cmd, &block
+      ret = nil
+      sh! cmd do |out|
+        ret = yield out
+      end
+      ret
+    end
 
     # If a cleanup step fails, the build should fail (so we'll know
     # cleanup needs to happen manually).
@@ -62,9 +68,7 @@ class CookbookTest
 
     def cleanup
       cleanup_step 'kitchen destroy -c'
-      cleanup_step 'cd ci && vagrant destroy -f'
-      cleanup_step "conjur host retire #{conjur_hostid}"
-    end
+
 
     def clean_output
       setup_step %Q(docker run --rm -v #{output_mount} #{conjur_image} /bin/bash -xc 'rm -rf #{src_output}/#{options[:only]}*')
@@ -98,28 +102,24 @@ class CookbookTest
     end
 
     def kitchen_tests
-      conjur_hostid, conjur_addr, token, cert = `ci/start.sh`.split(':')
-      exit_now! "ci/start.sh failed" unless $?.exitstatus == 0
+      conjur_hostid, conjur_addr, token, cert = setup_step %Q(ci/start_conjur.sh).split(':')
+      at_exit { cleanup_step "ci/cleanup_conjur.sh #{conjur_hostid}" } unless options[:keep]
 
       debug "conjur_hostid: #{conjur_hostid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
       kitchen_instances.each do |h|
         setup_step_stream "chef exec kitchen create #{h}"
+        at_exit { cleanup_step "chef exec kitchen destroy #{h}" } unless options[:keep]
+
         setup_step %Q(chef exec kitchen exec #{h} -c "echo '#{conjur_addr} conjur' | sudo tee -a /etc/hosts >/dev/null")
 
-        hostid = nil
         # This is kind of gross, but some platforms have curl, and
         # others have wget. I don't really want to take the hit of an
-        # upt-get update here (which would be required to isntall
+        # apt-get update here (which would be required to install
         # curl)
-        setup_step "chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on'" do |out|
-          hostid = out.strip
-        end
+        hostid = setup_step %Q(chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on').strip
 
-        api_key = nil
-        setup_step "ci/create_host.sh #{h} #{token} #{hostid}" do |out|
-          api_key = out.strip
-        end
+        api_key = setup_step %Q(ci/create_host.sh #{h} #{token} #{hostid}).strip
 
         env = "env CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "chef exec #{env} kitchen converge #{h}"
@@ -140,8 +140,6 @@ class CookbookTest
   end
 
   main do
-    
-    at_exit { cleanup } unless options[:keep]
     
     clean_output
     build_ci_containers
