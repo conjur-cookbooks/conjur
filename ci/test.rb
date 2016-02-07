@@ -71,11 +71,11 @@ class CookbookTest
     end
 
     def build_ci_containers
-      setup_step 'docker build -t ci-conjur-cookbook -f docker/Dockerfile .'
+      setup_step_stream 'docker build -t ci-conjur-cookbook -f docker/Dockerfile .'
       
       # Take advantage of the docker layer cache to work around the fact
       # that berks package isn't idempotent.
-      setup_step 'docker build -t ci-cookbook-storge -f docker/Dockerfile.cookbook .'
+      setup_step 'docker build -t ci-cookbook-storage -f docker/Dockerfile.cookbook .'
       setup_step "docker run -i --rm -v #{output_mount} ci-cookbook-storage bash -c 'mkdir -p #{src_output} && mv /cookbooks/conjur.tar.gz /src/output/cookbooks.tar.gz'"
     end
 
