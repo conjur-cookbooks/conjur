@@ -26,7 +26,7 @@ docker exec -i $conjur_cid \
 hf_token=$(docker exec -i $conjur_cid \
   bash -c 'conjur hostfactory token create --duration-hours 1 hf' | jsonfield 0.token)
 
-addr=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+addr=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 port=$(docker inspect $conjur_cid | jsonfield 0.NetworkSettings.Ports.443/tcp.0.HostPort)
 cert="$(docker exec -i $conjur_cid cat /opt/conjur/etc/ssl/conjur.pem | awk '$1=$1' ORS='\\n')"
 
