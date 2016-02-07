@@ -1,21 +1,33 @@
 #!/bin/bash -ex
 
-run_conjurize() {
-conjur hostfactory host create 3726wdk1ajtx9r365p6r815pgxjz1m2v78s1k21rht2k7ec1d2005x6e $hostid | \
-  conjurize --ssh --sudo | vagrant ssh 1>&2
-}
+img=registry.tld/conjur-appliance-cuke-master:4.6-stable
 
-cd $(dirname $0)
+docker rm -f conjur 1>&2 || true
 
-vagrant up 1>&2
-vagrant rsync 1>&2
+docker pull $img 1>&2
 
-hostid="cookbook-ci/$(vagrant ssh -- curl -s http://169.254.169.254/latest/meta-data/instance-id)"
+conjur_cid=$(docker run  -P -d \
+  -e CONJUR_APPLIANCE_URL=https://localhost/api \
+  -e CONJUR_AUTHN_LOGIN=admin \
+  -e CONJUR_AUTHN_API_KEY=secret \
+  -e CONJUR_CERT_FILE=/opt/conjur/etc/ssl/conjur.pem \
+  $img 1>&2)
+docker run --rm --link $conjur_cid:conjur $img /opt/conjur/evoke/bin/wait_for_conjur 1>&2
 
-conjur host show $hostid 1>&2 || run_conjurize
+# gnutls_handshake on ubuntu12 fails if the DH prime is too
+# short. Generate a longer one to make it happy.
+docker exec -i $conjur_cid bash -c "openssl dhparam -out /etc/ssl/dhparam.pem 1024 && sv restart nginx" 1>&2
+docker run --rm --link $conjur_cid:conjur $img /opt/conjur/evoke/bin/wait_for_conjur 1>&2
 
-vagrant ssh -- sudo service nginx restart 1>&2
 
-start_info=$(vagrant ssh -- sudo /vagrant/_start.sh)
+docker exec -i $conjur_cid \
+  bash -c 'conjur layer create test_hosts && conjur hostfactory create --as-role user:admin --layer test_hosts hf' 1>&2
 
-echo -n "$hostid:$start_info"
+hf_token=$(docker exec -i $conjur_cid \
+  bash -c 'conjur hostfactory token create --duration-hours 1 hf' | jsonfield 0.token)
+
+addr=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+port=$(docker inspect $conjur_cid 0.NetworkSettings.Ports.443/tcp.0.HostPort)
+cert="$(docker exec -i $conjur_cid cat /opt/conjur/etc/ssl/conjur.pem | awk '$1=$1' ORS='\\n')"
+
+echo -n "$conjur_cid:$addr:$port:$hf_token:$cert"

@@ -102,8 +102,9 @@ class CookbookTest
     end
 
     def kitchen_tests
-      conjur_hostid, conjur_addr, token, cert = setup_step %Q(ci/start_conjur.sh).split(':')
-      at_exit { cleanup_step "ci/cleanup_conjur.sh #{conjur_hostid}" } unless options[:keep]
+      conjur_cid, conjur_hostid, conjur_addr, token, cert = 
+        setup_step %Q(./start_conjur.sh).split(':')
+      at_exit { cleanup_step "docker rm -f #{conjur_cid} " } unless options[:keep]
 
       debug "conjur_hostid: #{conjur_hostid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
@@ -119,17 +120,15 @@ class CookbookTest
         # curl)
         hostid = setup_step %Q(chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on').strip
 
-        api_key = setup_step %Q(ci/create_host.sh #{h} #{token} #{hostid}).strip
+        api_key = setup_step %Q(./create_host.sh #{h} #{conjur_cid} #{token} #{hostid}).strip
 
         env = "env CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "chef exec #{env} kitchen converge #{h}"
 
         test_step_stream "chef exec kitchen verify #{h}"
 
-        # setup_step_stream "chef exec kitchen exec #{h} -c 'sudo /tmp/kitchen/data/conjurize.sh #{conjur_addr} #{token}'"
-
         login_audit = nil 
-        exitstatus = test_step "ci/check_login.sh #{hostid}" do |out|
+        exitstatus = test_step "./check_login.sh #{conjur_cid} #{hostid}" do |out|
           login_audit = out     # don't strip this one, we're just writing to the results
         end
         File.open("ci/output/#{h}-login.log", 'w') do |log|

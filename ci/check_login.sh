@@ -1,5 +1,14 @@
 #!/bin/bash -ex
 
-cd $(dirname $0)
+img=registry.tld/conjur-appliance-cuke-master:4.6-stable
 
-vagrant ssh -- sudo /vagrant/_check_login.sh "$@"
+conjur_cid=$1;shift
+host=$1;shift
+
+docker run --rm --link $conjur_cid \
+  -e CONJUR_APPLIANCE_URL=https://conjur/api \
+  -e CONJUR_AUTHN_LOGIN=admin \
+  -e CONJUR_AUTHN_API_KEY=secret \
+  -e CONJUR_CERT_FIELD=/opt/conjur/etc/ssl/conjur.pem \
+  $img \
+  bash -c "conjur audit resource -s host:$host" | grep ssh:login
