@@ -12,7 +12,6 @@ describe "conjur::conjurrc" do
     
   it "creates /etc/conjur.conf" do
     expect(subject).to create_file("/etc/conjur.conf").with(content: """
----
 account: demo
 appliance_url: https://conjur/api
 plugins: []
