@@ -114,9 +114,9 @@ class CookbookTest
         # others have wget. I don't really want to take the hit of an
         # apt-get update here (which would be required to install
         # curl)
-        hostid = setup_step %Q(chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on').strip
+        hostid = setup_step(%Q(chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on')).strip
 
-        api_key = setup_step %Q(ci/create_host.sh #{h} #{conjur_cid} #{token} #{hostid}).strip
+        api_key = setup_step(%Q(ci/create_host.sh #{h} #{conjur_cid} #{token} #{hostid})).strip
 
         env = "env CONJUR_APPLIANCE_URL=https://conjur:#{conjur_port}/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "chef exec #{env} kitchen converge #{h}"
