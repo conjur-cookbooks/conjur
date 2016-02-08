@@ -99,10 +99,10 @@ class CookbookTest
 
     def kitchen_tests
       conjur_cid, conjur_addr, conjur_port, token, cert = 
-        setup_step %Q(ci/start_conjur.sh).split(':')
-      at_exit { cleanup_step "docker rm -f #{conjur_cid} " } # we're always recreating it, so no point in keeping it, right?
+        setup_step(%Q(ci/start_conjur.sh)).split(':')
+      at_exit { cleanup_step "docker rm -f #{conjur_cid}" } # we're always recreating it, so no point in keeping it, right?
 
-      debug "conjur_hostid: #{conjur_hostid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
+      debug "conjur_cid: #{conjur_cid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
       kitchen_instances.each do |h|
         setup_step_stream "chef exec kitchen create #{h}"
