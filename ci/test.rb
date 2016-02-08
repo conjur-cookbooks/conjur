@@ -99,8 +99,8 @@ class CookbookTest
 
     def kitchen_tests
       conjur_cid, conjur_addr, conjur_port, token, cert = 
-        setup_step(%Q(ci/start_conjur.sh)).split(':')
-      at_exit { cleanup_step "docker rm -f #{conjur_cid}" } # we're always recreating it, so no point in keeping it, right?
+        setup_step_stream(%Q(ci/start_conjur.sh)).stdout.split(':')
+      at_exit { cleanup_step "docker rm -f #{conjur_cid}" } unless options[:keep]
 
       debug "conjur_cid: #{conjur_cid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
@@ -127,7 +127,7 @@ class CookbookTest
         exitstatus = test_step "ci/check_login.sh #{conjur_cid} #{hostid}" do |out|
           login_audit = out     # don't strip this one, we're just writing to the results
         end
-        File.open("ci/output/#{h}-login.log", 'w') do |log|
+        File.open("ci/#{h}-login.xml", 'w') do |log|
           log.write exitstatus == 0 ? login_audit : "no ssh:login found for #{hostid}"
         end
       end

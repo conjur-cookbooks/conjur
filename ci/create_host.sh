@@ -1,6 +1,5 @@
 #!/bin/bash -ex
 
-img=registry.tld/conjur-appliance-cuke-master:4.6-stable
 kitchen_name=$1; shift          # unused, eases debugging
 conjur_cid=$1; shift
 token=$1; shift
