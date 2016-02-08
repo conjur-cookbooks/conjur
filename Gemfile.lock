@@ -212,6 +212,7 @@ DEPENDENCIES
   docker-api
   net-ssh (~> 2.9)
   netrc
+  pry
   rspec-core
   rspec-expectations
   rspec_junit_formatter

@@ -15,3 +15,6 @@ gem 'chefspec'
 gem 'conjur-api', :git => 'https://github.com/conjurinc/api-ruby.git', :branch => 'master'
 gem 'conjur-cli', :git => 'https://github.com/conjurinc/cli-ruby.git', :branch => 'master'
 
+group :development do
+  gem 'pry'
+end
