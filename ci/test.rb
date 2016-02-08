@@ -28,10 +28,10 @@ class CookbookTest
     alias_method :test_step, :sh
 
     # If a setup step fails, the build should fail.
-    def setup_step cmd, &block
+    def setup_step cmd
       ret = nil
       sh! cmd do |out|
-        ret = yield out if block_given?
+        ret = out
       end
       ret
     end
