@@ -6,4 +6,4 @@ conjur_cid=$1; shift
 token=$1; shift
 hostid=$1; shift
 
-docker exec -i conjur conjur hostfactory host create $token $hostid | jsonfield api_key
+docker exec -i $conjur_cid conjur hostfactory host create $token $hostid | jsonfield api_key
