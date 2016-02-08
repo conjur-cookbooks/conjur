@@ -86,7 +86,7 @@ class CookbookTest
     end
 
     def run_rspec
-      test_step "docker run -i --rm -v #{output_mount} -v #{Dir.pwd}/spec:/src/spec ci-conjur-cookbook chef exec rspec --format RSpecJUnitFormatter --out /src/spec/report.xml spec/"
+      test_step_stream "docker run -i --rm -v #{output_mount} -v #{Dir.pwd}/spec:/src/spec ci-conjur-cookbook chef exec rspec --format documentation --format RspecJunitFormatter --out /src/spec/report.xml spec/"
     end
 
     def kitchen_instances
@@ -138,22 +138,20 @@ class CookbookTest
     
     clean_output
     build_ci_containers
-    unless options[:'kitchen-only']
-      lint_cookbook
-      run_rspec
-    end
-    kitchen_tests
+    lint_cookbook
+    run_rspec
+    kitchen_tests if options[:'kitchen']
     
   end
   
   
   
   options[:keep] = false
-  options[:'kitchen-only'] = false
+  options[:'kitchen'] = true
 
   on '--keep', '-k', 'clean up everything when done'
+  on '--[no-]kitchen', '-K', 'Only run test-kitchen step'
   on '--only [KITCHEN INSTANCE]', '-o', 'Only run kitchen setup and tests for this instance'
-  on '--kitchen-only', '-K', 'Only run test-kitchen step'
 
   use_log_level_option
   go!

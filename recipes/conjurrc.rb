@@ -28,6 +28,7 @@ file "/etc/conjur.conf" do
   # YAML.dump puts quotes around the values for netrc_path and
   # cert_file which gives logshipper fits.
   content """
+---
 account: #{account}
 appliance_url: #{node['conjur']['configuration']['appliance_url']}
 plugins: #{node['conjur']['configuration']['plugins'].to_a}

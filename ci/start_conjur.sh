@@ -2,8 +2,6 @@
 
 img=registry.tld/conjur-appliance-cuke-master:4.6-stable
 
-docker rm -f conjur 1>&2 || true
-
 docker pull $img 1>&2
 
 conjur_cid=$(docker run  -P -d \

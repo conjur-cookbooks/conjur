@@ -9,11 +9,9 @@ service 'logshipper' do
 end
 
 service_provider = node['conjur']['service_provider']
-puts "service_provider: #{service_provider}"
 include_recipe "conjur::_install_logshipper_#{service_provider}"
 
 syslog_provider = node['conjur']['syslog_provider']
-puts "syslog_provider: #{syslog_provider}"
 include_recipe "conjur::_install_logshipper_#{syslog_provider}"
 
 if node['etc']['group'].include? 'syslog'

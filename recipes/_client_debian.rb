@@ -29,5 +29,5 @@ end
 
 dpkg_package "conjur" do
   source target_path
-  action :upgrade
+  action :install
 end
