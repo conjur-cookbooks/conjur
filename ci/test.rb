@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'methadone'
+require 'conjur/cli'
 
 class CookbookTest
   include Methadone::Main
@@ -67,7 +68,9 @@ class CookbookTest
     end
 
     def clean_output
-      setup_step %Q(docker run --rm -v #{output_mount} #{conjur_image} /bin/bash -xc 'rm -rf #{src_output}/#{options[:only]}*')
+      setup_step "rm -rf ci/reports; mkdir -p ci/reports"
+
+      setup_step %Q(docker run --rm -v #{output_mount} #{conjur_image} /bin/bash -xc 'rm -rf #{src_output}/*')
     end
 
     def build_ci_containers
@@ -98,11 +101,17 @@ class CookbookTest
     end
 
     def kitchen_tests
-      conjur_cid, conjur_addr, conjur_port, token, cert = 
-        setup_step_stream(%Q(ci/start_conjur.sh)).stdout.split(':')
-      at_exit { cleanup_step "docker rm -f #{conjur_cid}" } unless options[:keep]
+      Conjur::Config.load
+      Conjur::Config.apply
 
-      debug "conjur_cid: #{conjur_cid} conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
+      build_host = URI.parse(Conjur::Authn.host).host
+      build_user, build_api_key = Conjur::Authn.get_credentials(:noask => true)
+
+      conjur_addr, conjur_port, token, cert = 
+        setup_step_stream(%Q(ci/start_conjur.sh #{build_host} #{build_user} #{build_api_key})).stdout.split(':')
+      at_exit { cleanup_step "ci/stop_conjur.sh" } unless options[:keep]
+
+      debug "conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
       kitchen_instances.each do |h|
         setup_step_stream "chef exec kitchen create #{h}"
@@ -116,7 +125,7 @@ class CookbookTest
         # curl)
         hostid = setup_step(%Q(chef exec kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on')).strip
 
-        api_key = setup_step(%Q(ci/create_host.sh #{h} #{conjur_cid} #{token} #{hostid})).strip
+        api_key = setup_step(%Q(ci/create_host.sh #{h} #{token} #{hostid})).strip
 
         env = "env CONJUR_APPLIANCE_URL=https://conjur:#{conjur_port}/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "chef exec #{env} kitchen converge #{h}"
@@ -124,10 +133,10 @@ class CookbookTest
         test_step_stream "chef exec kitchen verify #{h}"
 
         login_audit = nil 
-        exitstatus = test_step "ci/check_login.sh #{conjur_cid} #{hostid}" do |out|
+        exitstatus = test_step "ci/check_login.sh #{hostid}" do |out|
           login_audit = out     # don't strip this one, we're just writing to the results
         end
-        File.open("ci/#{h}-login.xml", 'w') do |log|
+        File.open("ci/reports/#{h}-login.xml", 'w') do |log|
           log.write exitstatus == 0 ? login_audit : "no ssh:login found for #{hostid}"
         end
       end
@@ -135,7 +144,6 @@ class CookbookTest
   end
 
   main do
-    
     clean_output
     build_ci_containers
     lint_cookbook

@@ -1,8 +1,9 @@
 #!/bin/bash -ex
 
-kitchen_name=$1; shift          # unused, eases debugging
-conjur_cid=$1; shift
+cd $(dirname $0)
+
+kitchen_instance=$1; shift
 token=$1; shift
 hostid=$1; shift
-
-docker exec -i $conjur_cid conjur hostfactory host create $token $hostid | jsonfield api_key
+ 
+vagrant ssh -- sudo /vagrant/remote/create_host.sh $kitchen_instance $token $hostid

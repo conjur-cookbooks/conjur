@@ -1,6 +1,5 @@
 #!/bin/bash -ex
 
-conjur_cid=$1;shift
-host=$1;shift
+cd $(dirname $0)
 
-docker exec -i $conjur_cid conjur audit resource -s host:$host | grep ssh:login
+vagrant ssh -- sudo /vagrant/remote/check_login.sh "$@"

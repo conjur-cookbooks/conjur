@@ -4,7 +4,6 @@ driver:
   aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_ID'] %>
   region: us-east-1
   instance_type: m3.medium
-  security_group_ids: ["cookbook-ci"]
 
 transport:
   connection_timeout: 10
