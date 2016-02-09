@@ -2,4 +2,4 @@
 
 bundle install
 
-summon -f secrets.ci.yml ci/test.rb
+summon -f secrets.ci.yml bundle exec ci/test.rb
