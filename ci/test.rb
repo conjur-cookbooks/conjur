@@ -107,16 +107,16 @@ class CookbookTest
       build_host = URI.parse(Conjur::Authn.host).host
       build_user, build_api_key = Conjur::Authn.get_credentials(:noask => true)
 
-      conjur_addr, conjur_port, token, cert = 
+      conjur_addr, token, cert = 
         setup_step_stream(%Q(ci/start_conjur.sh #{build_host} #{build_user} #{build_api_key})).stdout.split(':')
       at_exit { cleanup_step "ci/stop_conjur.sh" } unless options[:keep]
 
       debug "conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
-      kitchen_instances.each do |h|
-        setup_step_stream "chef exec kitchen create #{h}"
-        at_exit { cleanup_step "chef exec kitchen destroy #{h}" } unless options[:keep]
+      setup_step_stream "chef exec kitchen create -c"
+      at_exit { cleanup_step "chef exec kitchen destroy" } unless options[:keep]
 
+      kitchen_instances.each do |h|
         setup_step %Q(chef exec kitchen exec #{h} -c "echo '#{conjur_addr} conjur' | sudo tee -a /etc/hosts >/dev/null")
 
         # This is kind of gross, but some platforms have curl, and
@@ -127,18 +127,15 @@ class CookbookTest
 
         api_key = setup_step(%Q(ci/create_host.sh #{h} #{token} #{hostid})).strip
 
-        env = "env CONJUR_APPLIANCE_URL=https://conjur:#{conjur_port}/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
+        env = "env CONJUR_APPLIANCE_URL=https://conjur/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "chef exec #{env} kitchen converge #{h}"
 
-        test_step_stream "chef exec kitchen verify #{h}"
+        # There doesn't seem to be a way to redirect busser's output
+        # to a file, so grab the Junit part of the results from the
+        # output
+        results = test_step_stream("chef exec kitchen verify #{h}").stdout[%r{(<\?xml version="1.0".*</testsuite>)}m,1]
+        File.open("ci/reports/TEST-#{h}.xml", 'w') { |log| log.puts results }
 
-        login_audit = nil 
-        exitstatus = test_step "ci/check_login.sh #{hostid}" do |out|
-          login_audit = out     # don't strip this one, we're just writing to the results
-        end
-        File.open("ci/reports/#{h}-login.xml", 'w') do |log|
-          log.write exitstatus == 0 ? login_audit : "no ssh:login found for #{hostid}"
-        end
       end
     end
   end

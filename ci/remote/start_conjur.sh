@@ -30,7 +30,6 @@ hf_token=$(docker exec -i conjur \
   bash -c 'conjur hostfactory token create --duration-hours 1 hf' | jsonfield 0.token)
 
 addr=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-port=$(docker inspect conjur | jsonfield 0.NetworkSettings.Ports.443/tcp.0.HostPort)
 cert="$(docker exec -i conjur cat /opt/conjur/etc/ssl/conjur.pem | awk '$1=$1' ORS='\\n')"
 
-echo -n "$addr:443:$hf_token:$cert" >&4
+echo -n "$addr:$hf_token:$cert" >&4

@@ -24,3 +24,4 @@ features/reports
 vendor/
 spec/report.xml
 ci/output/
+ci/reports/

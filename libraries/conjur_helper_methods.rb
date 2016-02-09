@@ -27,6 +27,10 @@ module ConjurDetect
   def self.platform_version?(node, spec)
     Chef::VersionConstraint.new(spec).include?(node['platform_version'])
   end
+
+  def self.selinux_enabled?
+    system('/usr/sbin/selinuxenabled')
+  end
 end
 
 module ConjurHelperMethods

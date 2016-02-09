@@ -8,6 +8,7 @@ default['conjur']['service_provider'] = ConjurDetect.detect_init
 default['conjur']['syslog_provider'] = ConjurDetect.detect_syslog
 # Write a sudoers.d which gives passwordless sudo to the 'conjurers' group
 default['conjur']['grant_passwordless_sudo_to_conjurers'] = true
+default['conjur']['selinux_enabled'] = ConjurDetect.selinux_enabled?
 # Configure verbose logging for SSHD
 default['conjur']['sshd']['debug'] = false
 

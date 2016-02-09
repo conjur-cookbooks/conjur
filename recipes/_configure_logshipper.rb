@@ -1,6 +1,7 @@
 service 'logshipper' do
   action :nothing
-  if node['platform'] == 'centos' && ConjurDetect.platform_version?(node, '~>6.0')
+  if node['platform'] == 'amazon' ||
+      (node['platform_family'] == 'rhel' && ConjurDetect.platform_version?(node, '~>6.0'))
     provider Chef::Provider::Service::Upstart
   end
 end

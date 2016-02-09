@@ -19,32 +19,46 @@ provisioner:
   data_path: ci
 
 platforms:
-  - name: ubuntu-12.04
-  - name: ubuntu-14.04
-    driver:
-      image_id: ami-9eaa1cf6
-    transport:
-      username: ubuntu
   - name: amazon
     driver:
-      image_id: ami-2051294a
+      image_id: ami-60b6c60a
     transport:
       username: ec2-user
-  - name: debian-8
-    driver:
-      image_id: ami-8b9a63e0
-    transport:
-      username: admin
   - name: centos-6
     driver:
-      image_id: ami-bc8131d4
+      image_id: ami-57cd8732
     transport:
-      username: root
+      username: centos
   - name: centos-7
     driver:
       image_id: ami-61bbf104
     transport:
       username: centos
+  - name: debian-8
+    driver:
+      image_id: ami-8b9a63e0
+    transport:
+      username: admin
+  - name: ubuntu-12.04
+    driver:
+      image_id: ami-427a392a
+    transport:
+      username: ubuntu
+  - name: ubuntu-14.04
+    driver:
+      image_id: ami-663a6e0c
+    transport:
+      username: ubuntu
+  - name: rhel-6
+    driver:
+      image_id: ami-0d28fe66
+    transport:
+      username: ec2-user
+  - name: rhel-7
+    driver:
+      image_id: ami-a8d369c0
+    transport:
+      username: ec2-user
 
 suites:
   - name: default
