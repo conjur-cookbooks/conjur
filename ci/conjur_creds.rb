@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/opt/conjur/embedded/bin/ruby
 
 require 'conjur/cli'
 
