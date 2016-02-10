@@ -1,5 +1,5 @@
 #!/bin/bash -ex
 
-bundle install
+./build.sh
 
-summon -f secrets.ci.yml bundle exec ci/test.rb
+summon -f secrets.ci.yml ./test.sh

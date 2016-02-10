@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 build_host=$1; shift
 build_user=$1; shift

@@ -64,7 +64,6 @@ describe "conjur::install" do
       expect(subject).to be_truthy
     end
     it "executes centos scripts" do
-      puts "node['platform']: #{chef_run.node['platform']} node['platform_family']: #{chef_run.node['platform_family']}"
       expect(subject).to run_execute("authconfig")
       expect(subject).to create_yum_repository("conjur")
       expect(subject).to install_package("logshipper")
