@@ -96,4 +96,4 @@ Creates the `/etc/conjur.conf` and `/etc/conjur-[acct].pem` from Chef attributes
 
 ## Tests
 
-This cookbook is verified by both `chefspec` and `serverspec` tests. Conjur Inc also verifies the correct operation of the SSH functionality on all supported platforms. More details about testing can be found in README.ci.md.
+This cookbook is verified by both `chefspec` and `serverspec` tests. Conjur Inc also verifies the correct operation of the SSH functionality on all supported platforms. More details about testing can be found in [README.ci.md](README.ci.md).
