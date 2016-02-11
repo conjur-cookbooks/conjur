@@ -1,5 +1,5 @@
-#!/bin/bash -exu
+#!/bin/bash -ex
 
 ./build.sh
 
-summon -f secrets.ci.yml ./test.sh --only ${SUITE}
+summon -f secrets.ci.yml ./test.sh
