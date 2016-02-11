@@ -16,11 +16,10 @@ class CookbookTest
     
     # Actual tests should ignore exit status. If the command fails,
     # the build will be marked unstable.
-    def test_step cmd
-      sh cmd
-    end
+    alias_method :test_step, :sh
 
-    # If a setup step fails, the build should fail.
+    # If a setup step fails, the build should fail. Wrap the call to
+    # #sh! to make it easier to grab command's stdout.
     def setup_step cmd
       ret = nil
       sh! cmd do |out|
@@ -31,9 +30,7 @@ class CookbookTest
 
     # If a cleanup step fails, the build should fail (so we'll know
     # cleanup needs to happen manually).
-    def cleanup_step cmd
-      sh! cmd
-    end
+    alias_method :cleanup_step, :sh!
 
     # Run a shell command, streaming output to STDERR. 120 minute default timeout.
     # 
@@ -76,7 +73,7 @@ class CookbookTest
       test_step "foodcritic ."
     end
 
-    def run_rspec
+    def run_specs
       test_step_stream "rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/"
     end
 
@@ -129,7 +126,7 @@ class CookbookTest
   main do
     clean_output
     lint_cookbook
-    run_rspec
+    run_specs
     kitchen_tests if options[:'kitchen']
     
   end
@@ -140,10 +137,10 @@ class CookbookTest
   options[:'kitchen'] = true
   options[:'conjur-creds'] = {}
 
-  on '--conjur-creds [CREDS]', '-c', 'Conjur credentials'
-  on '--keep', '-k', 'clean up everything when done'
-  on '--[no-]kitchen', '-K', 'Only run test-kitchen step'
-  on '--only [KITCHEN INSTANCE]', '-o', 'Only run kitchen setup and tests for this instance'
+  on '--conjur-creds [CREDS]', '-c', 'Conjur credentials to use to access the Conjur Docker registry'
+  on '--keep', '-k', "Don't clean up everything when done"
+  on '--[no-]kitchen', '-K', 'Run the kitchen step'
+  on '--only [KITCHEN INSTANCE]', '-o', 'Only run kitchen setup and tests for the specified instance'
 
   use_log_level_option
   go!

@@ -13,7 +13,7 @@ default['conjur']['selinux_enabled'] = ConjurDetect.selinux_enabled?
 default['conjur']['sshd']['debug'] = false
 
 # These attributes are used only by the client.rb recipe
-default['conjur']['client']['version'] = '4.28.2-1'
+default['conjur']['client']['version'] = '4.29.0-1'
 
 # These attributes are used only by the conjurrc recipe, which can be used
 # to install the initial Conjur configuration and certificate.
