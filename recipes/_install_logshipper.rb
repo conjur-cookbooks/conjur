@@ -4,6 +4,10 @@ user "logshipper" do
   group "conjur"
 end
 
+service 'logshipper' do
+  action :nothing
+end
+
 service_provider = node['conjur']['service_provider']
 include_recipe "conjur::_install_logshipper_#{service_provider}"
 
@@ -22,8 +26,8 @@ bash "mkfifo #{logshipper_fifo_path}" do
     [
       s.pipe?,
       (s.mode & 0777 == 0460),
-      s.uid == node.etc.passwd.logshipper.uid,
-      s.gid == node.etc.group[fifo_group].gid,
+      s.uid == node['etc']['passwd']['logshipper'].uid,
+      s.gid == node['etc']['group'][fifo_group].gid,
     ].all?
   rescue Errno::ENOENT, NoMethodError
     false
@@ -33,12 +37,13 @@ bash "mkfifo #{logshipper_fifo_path}" do
     rm -f #{logshipper_fifo_path}
     mkfifo --mode=0460 #{logshipper_fifo_path}
     chown logshipper:#{fifo_group} #{logshipper_fifo_path}
-  """
+"""
   
   # we need to restart as the pipe has moved
-  notifies :restart, 'service[logshipper]', :delayed if node.conjur.service_provider == "upstart"
-  notifies :restart, 'service[syslog]', :delayed if node.conjur.service_provider == "upstart"
+  notifies(:restart, 'service[logshipper]', :delayed)
+  notifies(:restart, 'service[syslog]', :delayed)
 end
+
 
 file "/var/log/logshipper.log" do
   owner 'logshipper'

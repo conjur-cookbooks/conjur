@@ -1,3 +1,8 @@
+# 0.4.0
+
+* Add automated testing for many more platforms
+* Rework testing use a real Conjur appliance
+
 # 0.3.4
 
 * Fix login on Debian

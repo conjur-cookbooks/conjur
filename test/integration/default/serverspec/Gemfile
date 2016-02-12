@@ -5,4 +5,4 @@ source 'https://rubygems.org'
 # this Gemfile altogether).
 gem 'net-ssh', '~> 2.7'
 gem 'serverspec', '~> 2.25.0'
-
+gem 'rspec_junit_formatter'

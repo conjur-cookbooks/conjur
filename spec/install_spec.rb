@@ -52,8 +52,10 @@ describe "conjur::install" do
   context "centos platform" do
     let(:platform) { 'centos' }
     let(:version) { '6.2' }
+
     before {
       chef_run.node.automatic.platform_family = 'rhel'
+      chef_run.node.automatic.conjur.selinux_enabled = true
     }
     
     it_behaves_like "common installation"

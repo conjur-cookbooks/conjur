@@ -4,7 +4,6 @@ rubocop.xml
 cookbooks
 .vendor
 .vagrant
-Berksfile.lock
 *~
 *#
 .#*
@@ -13,7 +12,6 @@ Berksfile.lock
 *.un~
 
 # Bundler
-Gemfile.lock
 bin/*
 .bundle/*
 
@@ -23,3 +21,7 @@ cookbooks.tar.gz
 docker/*.image
 
 features/reports
+vendor/
+spec/report.xml
+ci/output/
+ci/reports/

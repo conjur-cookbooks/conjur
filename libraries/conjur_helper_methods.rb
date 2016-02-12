@@ -23,6 +23,14 @@ module ConjurDetect
       'rsyslog'
     end
   end
+
+  def self.platform_version?(node, spec)
+    Chef::VersionConstraint.new(spec).include?(node['platform_version'])
+  end
+
+  def self.selinux_enabled?
+    system('/usr/sbin/selinuxenabled')
+  end
 end
 
 module ConjurHelperMethods
@@ -41,16 +49,16 @@ module ConjurHelperMethods
     ENV['CONJUR_ACCOUNT'] || conjur_conf['account'] or raise "Conjur account is not available"
   end
 
-  def conjur_host_id node = nil
-    id = [ ENV['CONJUR_AUTHN_LOGIN'], (node ? (node['conjur']['identity']||{}) : {})['login'], conjur_netrc[0] ].compact.first
+  def conjur_host_id attrs = node
+    id = [ ENV['CONJUR_AUTHN_LOGIN'], (attrs ? (attrs['conjur']['identity']||{}) : {})['login'], conjur_netrc[0] ].compact.first
     raise "No host identity is available" unless id
     tokens = id.split('/')
     raise "Expecting 'host' id, got #{tokens[0]}" unless tokens[0] == 'host'
     tokens[1..-1].join('/')
   end
 
-  def conjur_host_api_key node = nil
-    ENV['CONJUR_AUTHN_API_KEY'] || (node ? (node['conjur']['identity']||{}) : {})['password'] || conjur_netrc[1] or raise "No host api key is available"
+  def conjur_host_api_key attrs = node
+    ENV['CONJUR_AUTHN_API_KEY'] || (attrs ? (attrs['conjur']['identity']||{}) : {})['password'] || conjur_netrc[1] or raise "No host api key is available"
   end
 
   def conjur_ldap_url

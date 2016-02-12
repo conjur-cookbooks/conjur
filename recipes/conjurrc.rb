@@ -24,16 +24,16 @@
 
 account = node['conjur']['configuration']['account']
 
-conjurrc = {
-  "account" => account,
-  "appliance_url" => node['conjur']['configuration']['appliance_url'],
-  "plugins" => node['conjur']['configuration']['plugins'].to_a,
-  "netrc_path" => "/etc/conjur.identity",
-  "cert_file" => "/etc/conjur-#{account}.pem"
-}
-
 file "/etc/conjur.conf" do
-  content YAML.dump(conjurrc)
+  # YAML.dump puts quotes around the values for netrc_path and
+  # cert_file which gives logshipper fits.
+  content """
+account: #{account}
+appliance_url: #{node['conjur']['configuration']['appliance_url']}
+plugins: #{node['conjur']['configuration']['plugins'].to_a}
+netrc_path: /etc/conjur.identity
+cert_file: /etc/conjur-#{account}.pem
+"""
   mode "0644"
 end.run_action(:create)
 

@@ -29,4 +29,5 @@ end
 
 dpkg_package "conjur" do
   source target_path
+  action :install
 end

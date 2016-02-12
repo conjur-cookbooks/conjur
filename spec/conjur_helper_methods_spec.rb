@@ -4,7 +4,7 @@ require "#{File.dirname(File.dirname(__FILE__))}/libraries/conjur_helper_methods
 
 describe ConjurHelperMethods do
   subject {
-    Struct.new(:dummy) do
+    Struct.new(:dummy, :node) do
       include ConjurHelperMethods
     end.new
   }

@@ -16,24 +16,49 @@ driver_config:
 
 provisioner:
   name: chef_zero
+  data_path: ci
 
 platforms:
-  - name: ubuntu-12.04
-  - name: ubuntu-14.04
+  - name: amazon
     driver:
-      image_id: ami-9eaa1cf6
-    transport:
-      username: ubuntu
-  - name: rhel-7.2
-    driver:
-      image_id: ami-2051294a
+      image_id: ami-60b6c60a
     transport:
       username: ec2-user
+  - name: centos-6
+    driver:
+      image_id: ami-57cd8732
+    transport:
+      username: centos
+  - name: centos-7
+    driver:
+      image_id: ami-61bbf104
+    transport:
+      username: centos
   - name: debian-8
     driver:
       image_id: ami-8b9a63e0
     transport:
       username: admin
+  - name: ubuntu-12.04
+    driver:
+      image_id: ami-427a392a
+    transport:
+      username: ubuntu
+  - name: ubuntu-14.04
+    driver:
+      image_id: ami-663a6e0c
+    transport:
+      username: ubuntu
+  - name: rhel-6
+    driver:
+      image_id: ami-0d28fe66
+    transport:
+      username: ec2-user
+  - name: rhel-7
+    driver:
+      image_id: ami-a8d369c0
+    transport:
+      username: ec2-user
 
 suites:
   - name: default
@@ -41,29 +66,14 @@ suites:
       - recipe[conjur::client]
       - recipe[conjur::conjurrc]
       - recipe[conjur::install]
+      - recipe[conjur::configure]
     attributes:
       conjur:
+        identity:
+          account: cucumber
+          login: <%= ENV['CONJUR_AUTHN_LOGIN'] %>
+          password: <%= ENV['CONJUR_AUTHN_API_KEY'] %>
         configuration:
-          service_provider: runit
-          syslog_provider: syslog-ng
-          account: demo
-          appliance_url: https://conjur/api
-          ssl_certificate: |
-            -----BEGIN CERTIFICATE-----
-            MIICzTCCAbWgAwIBAgIJAIMlw8P9K504MA0GCSqGSIb3DQEBBQUAMBExDzANBgNV
-            BAMTBmNvbmp1cjAeFw0xNTAzMjUxNzQ3NTJaFw0yNTAzMjIxNzQ3NTJaMBExDzAN
-            BgNVBAMTBmNvbmp1cjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALHh
-            pZbvPIEeG7cLIG0qEFoq8P6abnWZrA9C37D8aUwXMW+8q6tP6oWxI1bRF3Ym73Fp
-            GNsB/eS548boXvyYkwSsmfTEZ6GY7I2Ey9spgVtt18s/1FoKrx+WMmbYBkHEos26
-            KEVZuJ0pbVQxvtH9MmdRQZzZfmNMFLYWNW9jsg6pd3qEH8w6ba617vJf6m0baLRE
-            r3GWLTWlzjTthZSzJBw94fnIBkCvYiNU3zmZy8qrFWQ+EYYV0do5XeOh5wPXAjUi
-            HBnpvIFJkO/ex3YxS87QHr8yfbVPj6wzP1VRviroZarOvyDvzrXU2leWjRvmHo5m
-            g8GwV+Ws+7hr5RwJkFcCAwEAAaMoMCYwJAYDVR0RBB0wG4IJbG9jYWxob3N0ggZj
-            b25qdXKCBmNvbmp1cjANBgkqhkiG9w0BAQUFAAOCAQEApZAY6LDQnpDd798JN2a4
-            N/PDZ306qn6K0YNSpIAfz8xMSazEoISG4At2wQy5yKyyfiS804+XpGHxMdC2N+F5
-            AE558AsrfJB5OyRguxeKqTgOO6ZpYJ57x7G8OWqxCft0QizCXQszr6q2wRttkd3U
-            qVeLCUZJfwK7mY0iS5bpZM4pKWIjH9Zdkh7mbrhnNtO+tiNQnf3YrX/U2+d89bwF
-            8XV4phCuptb75KspvmhjB4EpzU5vZYnEKWUIzIQMztdbf/JMet2vG+C2xNCOTRnC
-            rG+Mmg4IiA+YnPrnR2UiFLrK4HiWWOgV3fJnU0zi0lfCzpSD7WPO6NuvAfOVNd3m
-            cA==
-            -----END CERTIFICATE-----
+          account: cucumber
+          appliance_url: <%= ENV['CONJUR_APPLIANCE_URL'] %>
+          ssl_certificate: "<%= ENV['CONJUR_SSL_CERTIFICATE'] %>"

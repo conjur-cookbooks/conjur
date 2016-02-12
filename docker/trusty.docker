@@ -6,7 +6,26 @@ ENV CHEF_VERSION 12.2.1
 RUN wget -O- https://www.chef.io/chef/install.sh | sudo bash - /dev/stdin -v $CHEF_VERSION
 
 # patch chef up so it works on docker
-ADD upstart_patch.rb /tmp/upstart_patch.rb
+ADD distrib/upstart_patch.rb /tmp/upstart_patch.rb
 RUN cat /tmp/upstart_patch.rb >> \
   /opt/chef/embedded/apps/chef/lib/chef/provider/service/upstart.rb && \
   rm /tmp/upstart_patch.rb
+
+
+ADD distrib/id_rsa.pub /tmp/key.pub
+RUN mkdir -p /root/.ssh && cat /tmp/key.pub >> /root/.ssh/authorized_keys && rm -f /tmp/key.pub
+EXPOSE 22
+
+ADD ci/output/cookbooks.tar.gz /var/chef/.
+
+RUN chef-solo -o conjur::install
+
+COPY distrib/conjur.conf /etc/conjur.conf
+
+# with "expect fork", rsyslog service doesn't start correctly; 
+# "expect stop" fixes it. 
+RUN sed -i 's/expect fork/expect stop/' /etc/init/rsyslog.conf
+
+# There appear to be startup issues in this image, too, which prevents the filesystem upstart event from getting emitted. 
+RUN echo 'initctl start rsyslog\nexit 0' > /etc/rc.local
+
