@@ -104,7 +104,9 @@ class CookbookTest
         # curl)
         hostid = setup_step(%Q(kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on')).strip
 
-        api_key = setup_step(%Q(ci/create_host.sh #{h} #{token} #{hostid})).strip
+        header = %Q(Authorization:Token token="#{token}")
+        url= "https://#{conjur_addr}/api/host_factories/hosts?id=#{CGI::escape(h)}"
+        api_key = setup_step(%Q(curl -H '#{header}' -X POST -sk '#{url}' | jsonfield api_key)).strip
 
         env = "env CONJUR_APPLIANCE_URL=https://conjur/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "#{env} kitchen  converge #{h}"
