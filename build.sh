@@ -10,6 +10,6 @@ docker run -i --rm -v $PWD/ci/output:/src/output ci-cookbook-storage mv /cookboo
 
 if [ ! -z "$CONJUR_DOCKER_REGISTRY" ]; then
   img=$(./image_name.sh)
-  docker tag ci-conjur-bookbook${buildno} $img
+  docker tag ci-conjur-cookbook${buildno} $img
   docker push $img
 fi
