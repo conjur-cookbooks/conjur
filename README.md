@@ -27,6 +27,12 @@ These recipes can be used to build a "foundation" image, which is able to create
 
 ### Platforms
 
+* Amazon Linux
+* CentOS 6
+* CentOS 7
+* Debian 8
+* RHEL 6
+* RHEL 7
 * Ubuntu 12.04 LTS
 * Ubuntu 14.04 LTS
 
@@ -36,35 +42,7 @@ These recipes can be used to build a "foundation" image, which is able to create
 
 ## Attributes
 
-See `attributes/default.rb` for defaults.
-
-### SSH
-
-The following attributes pertain to login (ssh) functionality.
-
-* `node['conjur']['group']['conjurers']['name']` Name of the Unix group corresponding to Conjur `update` privilege
-* `node['conjur']['group']['conjurers']['gid']` GID number of the Unix group corresponding to Conjur `update` privilege
-* `node['conjur']['group']['users']['name']` Name of the Unix group corresponding to Conjur `execute` privilege
-* `node['conjur']['group']['users']['gid']` GID number of the Unix group corresponding to Conjur `execute` privilege
-* `node['conjur']['service_provider']` Service provider to use for `logshipper`
-* `node['conjur']['syslog_provider']` Syslog provider which is used on the machine, and will be hooked up to `logshipper`
-* `node['conjur'['grant_passwordless_sudo_to_conjurers']` Whether to grant passwordless `sudo` privilege to the `conjurers` group.
-* `node['conjur']['sshd']['debug']` Enable debug logging of `sshd`
-
-### Conjur client tools
-
-The following attributes pertain to installation of the [Conjur command-line tools](http://developer.conjur.net/client_setup/cli.html):
-
-* `node['conjur']['client']['version']` Installer version of Conjur CLI tools (optional)
-
-### Conjur connection configuration and SSL verification
-
-The following attributes can be used to configure the secure connection to the Conjur server:
-
-* `node['conjur']['configuration']['account']` Conjur organization account
-* `node['conjur']['configuration']['appliance_url']` URL to the Conjur appliance, in the form `https://conjur/api`.
-* `node['conjur']['configuration']['ssl_certificate']` Conjur server SSL certificate
-* `node['conjur']['configuration']['plugins']` List of activated CLI plugins
+See `attributes/default.rb` for defaults and documentation.
 
 ## Recipes
 
