@@ -2,4 +2,4 @@
 
 ./build.sh
 
-summon -f secrets.ci.yml ./test.sh
+summon -f secrets.ci.yml ./test.sh "$@"
