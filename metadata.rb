@@ -3,7 +3,7 @@ maintainer       'Conjur, Inc'
 maintainer_email 'support@conjur.net'
 license          'MIT License'
 description      'Installs/Configures conjur'
-version          '0.3.4'
+version          '0.4.0'
 
 recipe "conjur::install", "Installs Conjur base packages and configuration, suitable for a foundation image."
 
