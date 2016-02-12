@@ -6,3 +6,7 @@ docker build -t ci-conjur-cookbook .
 # that berks package isn't idempotent.
 docker build -t ci-cookbook-storage -f docker/Dockerfile.cookbook .
 docker run -i --rm -v $PWD/ci/output:/src/output ci-cookbook-storage mv /cookbooks/conjur.tar.gz /src/output/cookbooks.tar.gz
+
+if [ ! -z "$CONJUR_DOCKER_REGISTRY" ]; then
+  docker push $(./image_name.sh)
+fi

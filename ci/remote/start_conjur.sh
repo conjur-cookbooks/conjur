@@ -33,7 +33,7 @@ docker exec -i conjur \
 hf_token=$(docker exec -i conjur \
   bash -c 'conjur hostfactory token create --duration-hours 1 hf' | jsonfield 0.token)
 
-addr=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-cert="$(docker exec -i conjur cat /opt/conjur/etc/ssl/conjur.pem | awk '$1=$1' ORS='\\n')"
+external_ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+internal_ip=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 
-echo -n "$addr:$hf_token:$cert" >&4
+echo -n "$external_ip:$internal_ip:$hf_token" >&4

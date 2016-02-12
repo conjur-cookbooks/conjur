@@ -1,11 +1,15 @@
-#!/bin/bash -e
+#!/bin/bash -ex
+
+exec 4>&1 1>&2
 
 key_file=/tmp/aws_private_key.pem
 
-# Have docker allocate a pty if we're running interactively
-[[ -t 0 ]] && t="-t"
+img=$(./image_name.sh)
+if [ ! -z "$CONJUR_DOCKER_REGISTRY" ]; then
+  docker pull $img
+fi
 
-docker run --rm -i $t \
+docker run --rm -i \
   -e AWS_ACCESS_KEY_ID \
   -e AWS_SECRET_ACCESS_KEY \
   -e AWS_SSH_KEY_ID \
@@ -16,5 +20,4 @@ docker run --rm -i $t \
   -v $PWD/test:/src/test \
   -v $PWD/.kitchen:/src/.kitchen \
   -v $PWD/.kitchen.yml:/src/.kitchen.yml \
-  ci-conjur-cookbook "$@"
-
+  $img "$@" >&4

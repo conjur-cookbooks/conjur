@@ -2,7 +2,6 @@
 
 require 'methadone'
 require 'json'
-require 'active_support/core_ext/hash'
 
 class CookbookTest
   include Methadone::Main
@@ -86,13 +85,10 @@ class CookbookTest
     end
 
     def kitchen_tests
-      debug "options[:'conjur-creds']: #{options[:'conjur-creds']}"
-      creds = JSON.parse(options[:'conjur-creds']).with_indifferent_access
-      debug "creds: #{creds}"
-
-      conjur_addr, token, cert = 
-        setup_step_stream(%Q(ci/start_conjur.sh #{creds[:host]} #{creds[:login]} #{creds[:api_key]})).stdout.split(':')
-      at_exit { cleanup_step "ci/stop_conjur.sh" } unless options[:keep]
+      conjur_external_addr = options[:'conjur-external']
+      conjur_addr = options[:'conjur-internal']
+      token = options[:'conjur-token']
+      cert = setup_step("ci/get_cert.sh #{conjur_external_addr}").strip
 
       debug "conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
@@ -131,13 +127,14 @@ class CookbookTest
     
   end
   
-  
-  
   options[:keep] = false
   options[:'kitchen'] = true
   options[:'conjur-creds'] = {}
 
-  on '--conjur-creds [CREDS]', '-c', 'Conjur credentials to use to access the Conjur Docker registry'
+  on '--conjur-external [IP ADDR]', '-a', 'public IP address of Conjur appliance'
+  on '--conjur-internal [IP ADDR]', '-a', 'internal IP address of Conjur appliance'
+  on '--conjur-token [TOKEN]', '-t', 'Host factory token for creating test instances'
+
   on '--keep', '-k', "Don't clean up everything when done"
   on '--[no-]kitchen', '-K', 'Run the kitchen step'
   on '--only [KITCHEN INSTANCE]', '-o', 'Only run kitchen setup and tests for the specified instance'
