@@ -10,4 +10,5 @@ cat - >&4 <<EOF
 CONJUR_EXTERNAL_ADDR=${conjur_info[0]}
 CONJUR_INTERNAL_ADDR=${conjur_info[1]}
 CONJUR_TOKEN=${conjur_info[2]}
+MATRIX_IMAGE_TAG=$(./image_name.sh)
 EOF

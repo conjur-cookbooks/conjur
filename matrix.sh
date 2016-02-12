@@ -1,9 +1,7 @@
 #!/bin/bash -e
 
-prop_file=$1; shift
+if [ ! -z "$MATRIX_IMAGE_TAG" ]; then
+  docker pull $MATRIX_IMAGE_TAG
+fi
 
-external=$(awk -F '=' '/CONJUR_EXTERNAL_ADDR/ {print $2}' $prop_file)
-internal=$(awk -F '=' '/CONJUR_INTERNAL_ADDR/ {print $2}' $prop_file)
-token=$(awk -F '=' '/CONJUR_TOKEN/ {print $2}' $prop_file)
-
-./launch.sh bundle exec ci/test.rb --conjur-external $external --conjur-internal $internal --conjur-token $token "$@"
+./launch.sh bundle exec ci/test.rb --conjur-external $CONJUR_EXTERNAL_ADDR --conjur-internal $CONJUR_INTERNAL_ADDR --conjur-token $CONJUR_TOKEN "$@"
