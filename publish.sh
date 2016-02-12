@@ -1,3 +1,3 @@
 #!/bin/bash
 
-conjur env run -- knife cookbook site share conjur "Other" -o ../. -VV
+summon -f secrets.ci.yml -- knife cookbook site share conjur "Other" -o ../. -VV
