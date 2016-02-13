@@ -106,7 +106,8 @@ class CookbookTest
 
         header = %Q(Authorization:Token token="#{token}")
         url= "https://#{conjur_addr}/api/host_factories/hosts?id=#{CGI::escape(h)}"
-        api_key = setup_step(%Q(curl -H '#{header}' -X POST -sk '#{url}' | jsonfield api_key)).strip
+        host_json = setup_step %Q(curl -H '#{header}' -X POST -sk '#{url}')
+        api_key = JSON.parse(host_json)['api_key']
 
         env = "env CONJUR_APPLIANCE_URL=https://conjur/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
         setup_step_stream "#{env} kitchen  converge #{h}"
