@@ -81,7 +81,7 @@ class CookbookTest
     end
 
     def instance_id_url
-      'http://169.254.169.254/latest/meta-data/instance-id'
+
     end
 
     def kitchen_tests
@@ -102,10 +102,11 @@ class CookbookTest
         # others have wget. I don't really want to take the hit of an
         # apt-get update here (which would be required to install
         # curl)
+        instance_id_url = 'http://169.254.169.254/latest/meta-data/instance-id'
         hostid = setup_step(%Q(kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on')).strip
 
         header = %Q(Authorization:Token token="#{token}")
-        url= "https://#{conjur_addr}/api/host_factories/hosts?id=#{CGI::escape(h)}"
+        url= "https://#{conjur_external_addr}/api/host_factories/hosts?id=#{CGI::escape(hostid)}"
         host_json = setup_step %Q(curl -H '#{header}' -X POST -sk '#{url}')
         api_key = JSON.parse(host_json)['api_key']
 
