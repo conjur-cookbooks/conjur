@@ -3,9 +3,9 @@
 desc "Update vendor/cookbooks"
 task :vendor do
   puts "Vendoring cookbooks"
-  `rm -rf vendor`
-  `berks update`
-  `berks vendor vendor/cookbooks`
+  sh 'rm -rf vendor'
+  sh 'berks update'
+  sh 'berks vendor vendor/cookbooks'
 end
 
 desc "Package cookbooks into a chef-solo tarball"
