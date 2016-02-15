@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 # Save stdout to fd 4, then redirect stdout to stderr. The caller of
 # this script expects to get results on stdout. Doing this redirection

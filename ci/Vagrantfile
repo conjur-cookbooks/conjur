@@ -1,7 +1,7 @@
 Vagrant.configure(2) do |config|
   config.vm.box = 'phusion/ubuntu-14.04-amd64'
 
-  config.vm.synced_folder ".", "/vagrant", :type => "rsync", :rsync__exclude => ['*~', './output/', './reports/'], :rsync__verbose => true
+  config.vm.synced_folder ".", "/vagrant", :type => "rsync", :rsync__exclude => ['*~', 'output/', 'reports/'], :rsync__verbose => true
 
 
   config.vm.provider :aws do |aws, override|
