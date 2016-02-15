@@ -2,4 +2,4 @@ jenkins.sh
 .bundle/
 vendor/
 ci/output
-!ci/output/cookbooks.tar.gz
+!ci/output/conjur.tar.gz
