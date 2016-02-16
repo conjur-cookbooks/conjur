@@ -93,7 +93,10 @@ class CookbookTest
       debug "conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
       kitchen_instances.each do |h|
-        setup_step_stream "kitchen  create #{h}"
+        # Retry creation once
+        if sh_stream!("kitchen create #{h}", :nofail => true).exitstatus != 0
+          setup_step_stream "kitchen create #{h}"
+        end
         at_exit { cleanup_step "kitchen destroy #{h}" } unless options[:keep]
 
         setup_step %Q(kitchen exec #{h} -c "echo '#{conjur_addr} conjur' | sudo tee -a /etc/hosts >/dev/null")
