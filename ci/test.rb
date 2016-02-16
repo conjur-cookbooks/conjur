@@ -95,6 +95,7 @@ class CookbookTest
       kitchen_instances.each do |h|
         # Retry creation once
         if sh_stream!("kitchen create #{h}", :nofail => true).exitstatus != 0
+          warn "Failed first attempt to create #{h}"
           setup_step_stream "kitchen create #{h}"
         end
         at_exit { cleanup_step "kitchen destroy #{h}" } unless options[:keep]
