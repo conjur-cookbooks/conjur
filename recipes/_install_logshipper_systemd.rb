@@ -4,10 +4,3 @@ cookbook_file '/etc/systemd/system/logshipper.service' do
   group 'root'
   mode '0644'
 end
-
-bash 'enable and run logshipper' do
-  code """
-    systemctl enable logshipper
-    systemctl restart rsyslog
-  """
-end

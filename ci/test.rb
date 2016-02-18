@@ -115,12 +115,15 @@ class CookbookTest
         api_key = JSON.parse(host_json)['api_key']
 
         env = "env CONJUR_APPLIANCE_URL=https://conjur/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
-        setup_step_stream "#{env} kitchen  converge #{h}"
+        if sh_stream!("#{env} kitchen converge #{h}", :nofail => true).exitstatus != 0
+          warn "Failed first attempt to converge #{h}"
+          setup_step_stream "#{env} kitchen converge #{h}"
+        end
 
         # There doesn't seem to be a way to redirect busser's output
         # to a file, so grab the Junit part of the results from the
         # output
-        results = test_step_stream("kitchen  verify #{h}").stdout[%r{(<\?xml version="1.0".*</testsuite>)}m,1]
+        results = test_step_stream("kitchen verify #{h}").stdout[%r{(<\?xml version="1.0".*</testsuite>)}m,1]
         File.open("ci/reports/TEST-#{h}.xml", 'w') { |log| log.puts results }
 
       end
