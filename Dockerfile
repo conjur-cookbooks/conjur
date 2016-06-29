@@ -18,6 +18,9 @@ RUN vagrant plugin install vagrant-berkshelf && \
 # Add ChefDK's Ruby to path
 ENV PATH /opt/chefdk/embedded/bin:$PATH
 
+RUN mkdir -p /cookbooks
+VOLUME /cookbooks
+
 WORKDIR /src
 
 COPY Gemfile ./
