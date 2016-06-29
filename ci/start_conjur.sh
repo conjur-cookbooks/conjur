@@ -4,7 +4,7 @@
 # this script expects to get results on stdout. Doing this redirection
 # ensures that we can still what's going on with the commands we're
 # running.
-exec 4>&1 >&2
+exec 4>&1 1>&2
 
 build_host=$1; shift
 build_user=$1; shift

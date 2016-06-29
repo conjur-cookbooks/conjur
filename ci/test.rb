@@ -2,7 +2,6 @@
 
 require 'methadone'
 require 'json'
-require 'active_support/core_ext/hash'
 
 class CookbookTest
   include Methadone::Main
@@ -82,22 +81,23 @@ class CookbookTest
     end
 
     def instance_id_url
-      'http://169.254.169.254/latest/meta-data/instance-id'
+
     end
 
     def kitchen_tests
-      debug "options[:'conjur-creds']: #{options[:'conjur-creds']}"
-      creds = JSON.parse(options[:'conjur-creds']).with_indifferent_access
-      debug "creds: #{creds}"
-
-      conjur_addr, token, cert = 
-        setup_step_stream(%Q(ci/start_conjur.sh #{creds[:host]} #{creds[:login]} #{creds[:api_key]})).stdout.split(':')
-      at_exit { cleanup_step "ci/stop_conjur.sh" } unless options[:keep]
+      conjur_external_addr = options[:'conjur-external']
+      conjur_addr = options[:'conjur-internal']
+      token = options[:'conjur-token']
+      cert = setup_step("ci/get_cert.sh #{conjur_external_addr}").strip
 
       debug "conjur_addr: #{conjur_addr} token: #{token} cert: #{cert[0..10]}"
       
       kitchen_instances.each do |h|
-        setup_step_stream "kitchen  create #{h}"
+        # Retry creation once
+        if sh_stream!("kitchen create #{h}", :nofail => true).exitstatus != 0
+          warn "Failed first attempt to create #{h}"
+          setup_step_stream "kitchen create #{h}"
+        end
         at_exit { cleanup_step "kitchen destroy #{h}" } unless options[:keep]
 
         setup_step %Q(kitchen exec #{h} -c "echo '#{conjur_addr} conjur' | sudo tee -a /etc/hosts >/dev/null")
@@ -106,17 +106,24 @@ class CookbookTest
         # others have wget. I don't really want to take the hit of an
         # apt-get update here (which would be required to install
         # curl)
+        instance_id_url = 'http://169.254.169.254/latest/meta-data/instance-id'
         hostid = setup_step(%Q(kitchen exec #{h} -c 'echo $( if type -P curl >/dev/null;then  curl -s #{instance_id_url}; else wget -O - -q #{instance_id_url}; fi)' | grep -v 'Execute command on')).strip
 
-        api_key = setup_step(%Q(ci/create_host.sh #{h} #{token} #{hostid})).strip
+        header = %Q(Authorization:Token token="#{token}")
+        url= "https://#{conjur_external_addr}/api/host_factories/hosts?id=#{CGI::escape(hostid)}"
+        host_json = setup_step %Q(curl -H '#{header}' -X POST -sk '#{url}')
+        api_key = JSON.parse(host_json)['api_key']
 
         env = "env CONJUR_APPLIANCE_URL=https://conjur/api CONJUR_SSL_CERTIFICATE='#{cert}' CONJUR_AUTHN_LOGIN='host/#{hostid}' CONJUR_AUTHN_API_KEY='#{api_key}'"
-        setup_step_stream "#{env} kitchen  converge #{h}"
+        if sh_stream!("#{env} kitchen converge #{h}", :nofail => true).exitstatus != 0
+          warn "Failed first attempt to converge #{h}"
+          setup_step_stream "#{env} kitchen converge #{h}"
+        end
 
         # There doesn't seem to be a way to redirect busser's output
         # to a file, so grab the Junit part of the results from the
         # output
-        results = test_step_stream("kitchen  verify #{h}").stdout[%r{(<\?xml version="1.0".*</testsuite>)}m,1]
+        results = test_step_stream("kitchen verify #{h}").stdout[%r{(<\?xml version="1.0".*</testsuite>)}m,1]
         File.open("ci/reports/TEST-#{h}.xml", 'w') { |log| log.puts results }
 
       end
@@ -131,13 +138,14 @@ class CookbookTest
     
   end
   
-  
-  
   options[:keep] = false
   options[:'kitchen'] = true
   options[:'conjur-creds'] = {}
 
-  on '--conjur-creds [CREDS]', '-c', 'Conjur credentials to use to access the Conjur Docker registry'
+  on '--conjur-external [IP ADDR]', '-a', 'public IP address of Conjur appliance'
+  on '--conjur-internal [IP ADDR]', '-a', 'internal IP address of Conjur appliance'
+  on '--conjur-token [TOKEN]', '-t', 'Host factory token for creating test instances'
+
   on '--keep', '-k', "Don't clean up everything when done"
   on '--[no-]kitchen', '-K', 'Run the kitchen step'
   on '--only [KITCHEN INSTANCE]', '-o', 'Only run kitchen setup and tests for the specified instance'
