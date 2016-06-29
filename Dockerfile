@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER Conjur, Inc
 
-RUN apt-get update -yqq && apt-get install -yq rsync curl
+RUN apt-get update -yqq && apt-get install -yq rsync curl ssh
 
 RUN curl -L -o /tmp/chefdk.deb https://packages.chef.io/stable/debian/8/chefdk_0.15.15-1_amd64.deb && \
   dpkg -i /tmp/chefdk.deb && \
