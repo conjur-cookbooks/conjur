@@ -10,7 +10,7 @@ class CookbookTest
 
   class << self
     def conjur_image
-      'registry.tld/conjur-appliance-cuke-master:4.6-stable'
+      'registry.tld/conjur-appliance-cuke-master:4.8-stable'
     end
     
     # Actual tests should ignore exit status. If the command fails,
