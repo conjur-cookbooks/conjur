@@ -5,7 +5,7 @@ user "logshipper" do
 end
 
 service 'logshipper' do
-  action :nothing
+  action :disable
 end
 
 service_provider = node['conjur']['service_provider']
@@ -38,9 +38,6 @@ bash "mkfifo #{logshipper_fifo_path}" do
     mkfifo --mode=0460 #{logshipper_fifo_path}
     chown logshipper:#{fifo_group} #{logshipper_fifo_path}
 """
-  
-  # we need to restart as the pipe has moved
-  notifies(:restart, 'service[logshipper]', :delayed)
   notifies(:restart, 'service[syslog]', :delayed)
 end
 

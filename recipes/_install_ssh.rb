@@ -1,5 +1,9 @@
 include_recipe "sshd-service"
 
+chef_gem 'netrc' do
+  compile_time true if Chef::Resource::ChefGem.method_defined?(:compile_time)
+end
+
 %w(nscd nslcd).each do |s|
   service s do
     action :nothing
