@@ -39,12 +39,12 @@ platforms:
       image_id: ami-8b9a63e0
     transport:
       username: admin
-  - name: ubuntu-12.04
+  - name: ubuntu-12
     driver:
       image_id: ami-427a392a
     transport:
       username: ubuntu
-  - name: ubuntu-14.04
+  - name: ubuntu-14
     driver:
       image_id: ami-663a6e0c
     transport:

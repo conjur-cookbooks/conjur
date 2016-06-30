@@ -1,3 +1,7 @@
+# 0.4.1
+
+* On platforms that use systemd, don't try to restart logshipper in conjur::install
+
 # 0.4.0
 
 * Add automated testing for many more platforms
