@@ -35,6 +35,4 @@ file '/etc/init/logshipper.conf' do
     # workaround a bug in logshipper 0.1.0
     env HOME=/etc
   ) + upstart_script
-
-  notifies :restart, 'service[logshipper]', :delayed
 end

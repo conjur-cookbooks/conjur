@@ -6,7 +6,7 @@
 # running.
 exec 4>&1 1>&2
 
-img=registry.tld/conjur-appliance-cuke-master:4.6-stable
+img=registry.tld/conjur-appliance-cuke-master:4.8-stable
 
 docker rm -f conjur || true
 
@@ -17,6 +17,7 @@ docker run -p 443:443 -p 636:636 -d --name conjur \
   -e CONJUR_AUTHN_LOGIN=admin \
   -e CONJUR_AUTHN_API_KEY=secret \
   -e CONJUR_CERT_FILE=/opt/conjur/etc/ssl/conjur.pem \
+  --privileged \
   $img
 
 docker run --rm --link conjur $img /opt/conjur/evoke/bin/wait_for_conjur
