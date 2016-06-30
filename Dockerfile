@@ -24,7 +24,7 @@ VOLUME /cookbooks
 WORKDIR /src
 
 COPY Gemfile ./
-RUN bundle install
+RUN chef exec bundle install
 
 COPY attributes/ attributes/
 COPY files/ files/
