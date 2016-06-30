@@ -1,3 +1,5 @@
+include_recipe "sshd-service"
+
 %w(nscd nslcd).each do |s| 
   service s do
     action :nothing
