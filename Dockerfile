@@ -1,7 +1,7 @@
 FROM ruby:2.1
 MAINTAINER Conjur, Inc
 
-RUN apt-get update -yqq && apt-get install -yq rsync
+RUN apt-get update -yqq && apt-get install -yq rsync curl ssh
 
 WORKDIR /src
 
