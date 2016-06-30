@@ -13,7 +13,7 @@ RUN curl -L -o /tmp/vagrant.deb https://releases.hashicorp.com/vagrant/1.7.4/vag
   dpkg -i /tmp/vagrant.deb && \
   rm /tmp/vagrant.deb
 
-RUN vagrant plugin install vagrant-berkshelf && \
+RUN vagrant plugin install vagrant-berkshelf --plugin-version 2.0.1 && \
   vagrant plugin install vagrant-omnibus && \
   vagrant plugin install vagrant-aws
 
