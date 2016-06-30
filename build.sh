@@ -1,8 +1,10 @@
 #!/bin/bash -ex
 
 buildno=${BUILD_NUMBER+:${BUILD_NUMBER}}
+
+docker pull ruby:2.1
 docker build -t ci-conjur-cookbook${buildno} .
-      
+
 # Take advantage of the docker layer cache to work around the fact
 # that berks package isn't idempotent.
 docker build -t ci-cookbook-storage -f Dockerfile.cookbook .
