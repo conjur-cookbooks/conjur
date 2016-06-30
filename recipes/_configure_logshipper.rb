@@ -16,5 +16,6 @@ machine #{conjur_appliance_url}/authn
     login host/#{conjur_host_id}
     password #{conjur_host_api_key}
 """
+  notifies(:enable, 'service[logshipper]', :delayed)
   notifies(:restart, 'service[logshipper]', :delayed)
 end

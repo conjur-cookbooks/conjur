@@ -10,10 +10,6 @@ transport:
   connection_retries: 5
   ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
 
-driver_config:
-  privileged: true
-  socket: <%= ENV['DOCKER_HOST'] || 'unix:///var/run/docker.sock' %>
-
 provisioner:
   name: chef_zero
   data_path: ci
