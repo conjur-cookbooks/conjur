@@ -74,7 +74,7 @@ class CookbookTest
     end
 
     def run_specs
-      test_step_stream "chef exec rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/"
+      test_step_stream "rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/"
     end
 
     def kitchen_instances
