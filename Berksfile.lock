@@ -4,11 +4,13 @@ DEPENDENCIES
     metadata: true
 
 GRAPH
-  apt (2.9.2)
-  conjur (0.4.1)
+  apt (4.0.1)
+    compat_resource (>= 12.10)
+  compat_resource (12.10.6)
+  conjur (0.4.2)
     apt (>= 0.0.0)
     sshd-service (>= 0.0.0)
     yum (>= 0.0.0)
   sshd-service (1.1.1)
     apt (>= 0.0.0)
-  yum (3.10.0)
+  yum (3.11.0)
