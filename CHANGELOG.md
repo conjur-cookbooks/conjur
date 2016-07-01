@@ -1,3 +1,7 @@
+# 0.4.2
+
+* Don't install any packages in the `configure` step.
+
 # 0.4.1
 
 * On platforms that use systemd, don't try to restart logshipper in conjur::install
