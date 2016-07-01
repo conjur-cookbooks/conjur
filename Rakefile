@@ -19,5 +19,5 @@ task :package => :vendor do
   Dir.chdir 'vendor'
   tarball = "conjur-#{version}.tar.gz"
   puts "Building cookbook tarball #{tarball}"
-  `tar czv --numeric-owner --owner=0 --group=root --mode=og+r -f ../#{tarball} cookbooks`
+  `tar -cvzf ../#{tarball} cookbooks`
 end
