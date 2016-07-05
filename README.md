@@ -91,4 +91,10 @@ On CentOS 7 this will install packages from the Conjur repo like:
   - [logshipper-0.2.3-1.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/logshipper-0.2.3-1.el7.x86_64.rpm),
   - [yaml-cpp-0.5.1-6.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/yaml-cpp-0.5.1-6.el7.x86_64.rpm),
   - [jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm),
-along with dependencies from the system repository.
+
+along with dependencies from the system repository:
+  - boost-filesystem,
+  - boost-program-options,
+  - boost-regex,
+  - boost-system,
+  - libicu.
