@@ -75,3 +75,20 @@ Creates the `/etc/conjur.conf` and `/etc/conjur-[acct].pem` from Chef attributes
 ## Tests
 
 This cookbook is verified by both `chefspec` and `serverspec` tests. Conjur Inc also verifies the correct operation of the SSH functionality on all supported platforms. More details about testing can be found in [README.ci.md](README.ci.md).
+
+## Logshipper
+
+Logshipper binary packages are required for auditing ssh events and are installed by the cookbook from Conjur-managed apt and yum repos.
+Adding the repo and installing logshipper can also be accomplished manually.
+
+For example in Enterprise Linux:
+
+    # yum-config-manager --add-repo https://s3.amazonaws.com/yum.conjur/conjur.repo
+    # yum-config-manager --enable conjur
+    # yum install logshipper
+
+On CentOS 7 this will install packages from the Conjur repo like:
+  - [logshipper-0.2.3-1.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/logshipper-0.2.3-1.el7.x86_64.rpm),
+  - [yaml-cpp-0.5.1-6.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/yaml-cpp-0.5.1-6.el7.x86_64.rpm),
+  - [jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm),
+along with dependencies from the system repository.
