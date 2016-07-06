@@ -30,7 +30,7 @@ $ conjur host create myhost01 | tee host.json
 # Generate the conjurize script, note that --conjur-cookbook-url can also be a local path
 $ cat host.json | \
   conjurize --sudo --ssh \
-  --chef-executable /usr/bin/chef-solo \
+  --chef-executable /bin/chef-solo \
   --conjur-cookbook-url https://www.myorg.com/conjur-v0.4.2-1-ga813184.tar.gz
 
 #!/bin/sh
