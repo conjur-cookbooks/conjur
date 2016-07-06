@@ -21,9 +21,9 @@ $ conjur host create myhost01 | tee host.json
   "id": "myhost01",
   "userid": "dustin",
   "created_at": "2016-07-06T18:04:23Z",
-  "ownerid": "conjur:user:dustin",
-  "roleid": "conjur:host:myhost01",
-  "resource_identifier": "conjur:host:myhost01",
+  "ownerid": "myorg:user:dustin",
+  "roleid": "myorg:host:myhost01",
+  "resource_identifier": "myorg:host:myhost01",
   "api_key": "3687gvknscext697rg6shvz3w777g03xeq8b63c4xx422m2s5ep"
 }
 
@@ -39,7 +39,7 @@ set -e
 # Implementation note: 'tee' is used as a sudo-friendly 'cat' to populate a file with the contents provided below.
 
 sudo -n tee /etc/conjur.conf > /dev/null << EOF
-account: conjurops
+account: myorg
 appliance_url: https://conjur.myorg.com/api
 cert_file: /etc/conjur-myorg.pem
 netrc_path: /etc/conjur.identity
