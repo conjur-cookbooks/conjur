@@ -9,14 +9,14 @@ The lifecycle is roughly intended to operate like this:
 * A base OS image from the CentOS or Ubuntu LTS family is selected. 
 * The "foundation" cookbooks run on the base OS image to configure the connection to Conjur (and other desired systems), install packages, and perform static configuration.
 * A "foundation" image is captured after the foundation cookbooks have completed.
-* Machines are launched from the "foundation" image. Each machine is provided with Conjur identity, then a Chef run finishes the machine configuration (e.g. configure the host credentials for LDAPS connection to Conjur). At this point, Chef (or other configuration management tools) may also install and configure applications on top of the base OS foundation.
+* Machines are launched from the "foundation" image. Each machine is [provided with Conjur identity](https://developer.conjur.net/key_concepts/machine_identity.html), then a Chef run finishes the machine configuration (e.g. configure the host credentials for LDAPS connection to Conjur). At this point, Chef (or other configuration management tools) may also install and configure applications on top of the base OS foundation.
 
 ### Foundation Recipes
 
 These recipes can be used to build a "foundation" image, which is able to create a secure connection to Conjur, and has performed all package installation prior to the machine launch.
 
 * **install [required]** Installs base packages which are needed for Conjur SSH. All installation and configuration steps performed by this recipe can be built into an image.
-* **conjurrc [optiona]** Configures the connection to the Conjur server endpoint and establishes SSL verification. This information can be safely built into an image.
+* **conjurrc [optional]** Configures the connection to the Conjur server endpoint and establishes SSL verification. This information can be safely built into an image.
 * **client [optional]** Installs the Conjur command-line tools. This is optional for Conjur SSH functionality. The CLI can be built into an image.
 
 ### Launch recipes
@@ -76,25 +76,7 @@ Creates the `/etc/conjur.conf` and `/etc/conjur-[acct].pem` from Chef attributes
 
 This cookbook is verified by both `chefspec` and `serverspec` tests. Conjur Inc also verifies the correct operation of the SSH functionality on all supported platforms. More details about testing can be found in [README.ci.md](README.ci.md).
 
-## Logshipper
+## Offline installation
 
-Logshipper binary packages are required for auditing ssh events and are installed by the cookbook from Conjur-managed apt and yum repos.
-Adding the repo and installing logshipper can also be accomplished manually.
-
-For example in Enterprise Linux:
-
-    # yum-config-manager --add-repo https://s3.amazonaws.com/yum.conjur/conjur.repo
-    # yum-config-manager --enable conjur
-    # yum install logshipper
-
-On CentOS 7 this will install packages from the Conjur repo like:
-  - [logshipper-0.2.3-1.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/logshipper-0.2.3-1.el7.x86_64.rpm),
-  - [yaml-cpp-0.5.1-6.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/yaml-cpp-0.5.1-6.el7.x86_64.rpm),
-  - [jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm),
-
-along with dependencies from the system repository:
-  - boost-filesystem,
-  - boost-program-options,
-  - boost-regex,
-  - boost-system,
-  - libicu.
+If the machines you'd like to conjurize with this cookbook are behind a firewall,
+please see [OFFLINE.md](OFFLINE.md) for instructions.
