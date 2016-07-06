@@ -70,7 +70,7 @@ sudo -n /usr/bin/chef --recipe-url https://www.myorg.com/conjur-v0.4.2-1-ga81318
 This script can then be placed on the machine and run, or executed directly over SSH.
 
 ```
-cat host.json | conjurize ..args | ssh myuser@myhost01.myorg.com
+cat host.json | conjurize ..args | ssh -tt myuser@myhost01.myorg.com
 ```
 
 Note that if you don't require Conjur's SSH access management for your machines, you can omit conjurize's `--ssh` flag. This makes the above script much simpler, and doesn't require a Chef client install or running any cookbooks. 
