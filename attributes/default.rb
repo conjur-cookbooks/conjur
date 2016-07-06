@@ -32,6 +32,14 @@ default['conjur']['sshd']['debug'] = false
 default['conjur']['selinux_enabled'] = ConjurDetect.selinux_enabled?
 
 ########
+# Logshipper installation
+
+# Whether to set up Conjur's package repositories to install packages online.
+# This can be disabled eg. in restricted network scenarios, where packages are
+# preinstalled or mirrored to another preconfigured (eg. internal) repository.
+default['conjur']['logshipper']['conjur_repository'] = true
+
+########
 # Conjur client installation
 
 # The version of the Conjur client to be installed. This attribute are
