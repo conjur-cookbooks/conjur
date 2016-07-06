@@ -142,7 +142,7 @@ chmod 640 /etc/conjur.identity
 
 cat > attribs.json <<EOF
 {
-  "run_list": ["conjur::identity", "conjur::configure"],
+  "run_list": ["conjur::configure"],
   "conjur": {
     "configuration": {
       "account": "myorg",
