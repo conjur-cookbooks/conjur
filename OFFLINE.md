@@ -8,7 +8,7 @@ Machines behind a firewall can be assigned a Conjur identity, but some initial s
 
 Since this is a Chef cookbook, the Chef client and cookbooks need to be downloaded and available on the host system. The Chef client can be installed [from here](https://downloads.chef.io/chef-client/). Once the Chef client has been pre-installed on a machine, `conjurize` (see below) can be told to point to it.
 
-The `conjur` cookbook and all dependency cookbooks can be downloaded as a tarball from this GitHub repo. Download the latest tar.gz file [from this repository's Releases](https://github.com/conjur-cookbooks/conjur/releases) to a local directory or upload it to an internal location.
+The `conjur` cookbook and all dependency cookbooks can be downloaded as a tarball from this GitHub repo. Download the latest tar.gz file [from this repository's Releases](https://github.com/conjur-cookbooks/conjur/releases) to a local directory or upload it to an internal file server.
 
 Shipped with the [Conjur CLI](https://developer.conjur.net/cli), the [conjurize tool](https://developer.conjur.net/reference/tools/utilities/conjurize.html) has two flags that allow you to use a local Chef install and cookbook tarball, instead of pulling them from the internet. 
 
