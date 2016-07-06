@@ -109,7 +109,7 @@ $ chef-solo -o --json-attributes attribs.json \
 
 **Launch**
 
-Note that this requires the [jq](https://stedolan.github.io/jq/) tool to parse the Conjur API response. Install it in the 'Foundation' step. The following script should be run as `root` user.
+Note that this requires the [jq](https://stedolan.github.io/jq/) tool to parse the Conjur API response. Install it in the 'Foundation' step. The following script should be run as `root` user. Update this script to fit your needs.
 
 ```
 #!/bin/bash -e
