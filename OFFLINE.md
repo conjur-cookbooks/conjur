@@ -8,7 +8,7 @@ Machines behind a firewall can be assigned a Conjur identity, but some initial s
 
 Since this is a Chef cookbook, the Chef client and cookbooks need to be downloaded and available on the host system. The Chef client can be installed [from here](https://downloads.chef.io/chef-client/). Once the Chef client has been pre-installed on a machine, `conjurize` (see below) can be told to point to it.
 
-The `conjur` cookbook and all dependency cookbooks can be downloaded as a tarball from this GitHub repo. Download the latest tar.gz file [from this repository's Releases](https://github.com/conjur-cookbooks/conjur/releases). Upload this tar.gz file to a secure location of your choosing that your machines can reach.
+The `conjur` cookbook and all dependency cookbooks can be downloaded as a tarball from this GitHub repo. Download the latest tar.gz file [from this repository's Releases](https://github.com/conjur-cookbooks/conjur/releases) to a local directory or upload it to an internal location.
 
 Shipped with the [Conjur CLI](https://developer.conjur.net/cli), the [conjurize tool](https://developer.conjur.net/reference/tools/utilities/conjurize.html) has two flags that allow you to use a local Chef install and cookbook tarball, instead of pulling them from the internet. 
 
@@ -27,6 +27,7 @@ $ conjur host create myhost01 | tee host.json
   "api_key": "3687gvknscext697rg6shvz3w777g03xeq8b63c4xx422m2s5ep"
 }
 
+# Generate the conjurize script, note that --conjur-cookbook-url can also be a local path
 $ cat host.json | \
   conjurize --sudo --ssh \
   --chef-executable /usr/bin/chef \
@@ -39,13 +40,13 @@ set -e
 
 sudo -n tee /etc/conjur.conf > /dev/null << EOF
 account: conjurops
-appliance_url: https://conjur-master.itp.conjur.net/api
-cert_file: /etc/conjur-conjurops.pem
+appliance_url: https://conjur.myorg.com/api
+cert_file: /etc/conjur-myorg.pem
 netrc_path: /etc/conjur.identity
 plugins: []
 EOF
 
-sudo -n tee /etc/conjur-conjurops.pem > /dev/null << EOF
+sudo -n tee /etc/conjur-myorg.pem > /dev/null << EOF
 -----BEGIN CERTIFICATE-----
 ...truncated
 -----END CERTIFICATE-----
@@ -57,7 +58,7 @@ EOF
 sudo -n touch /etc/conjur.identity
 sudo -n chmod 600 /etc/conjur.identity
 sudo -n tee /etc/conjur.identity > /dev/null << EOF
-machine https://conjur-master.itp.conjur.net/api/authn
+machine https://conjur.myorg.com/api/authn
         login host/testhost001
         password 3687gvknscext697rg6shvz3w777g03xeq8b63c4xx422m2s5ep
 EOF
@@ -80,7 +81,7 @@ Note that if you don't require Conjur's SSH access management for your machines,
 
 conjurize is a good tool for assigning Conjur identity to one-off instances, but we recommend using [Host Factory](https://developer.conjur.net/reference/services/host_factory/) for assigning host identity at scale. Host Factory allows you to exchange secure tokens for host identity in specific layers. Hosts assume any permissions of the layers they enter.
 
-To prepare hosts for Host Factory, it is best to bake the installation and configuration of  packages required for Conjur host identity. Conjur configuration is set up in the base image you use to launch VMs from, whether you use Amazon AMIs, VMWare, etc. In this pattern, the only steps that need to be run on machine launch are 1. assigning identity and 2. finalizing Conjur configuration. 
+To prepare hosts for Host Factory, it is best to bake the installation and configuration of  packages required for Conjur host identity. Conjur configuration is set up in the base image you use to launch VMs from, whether you use Amazon AMIs, VMware, etc. In this pattern, the only steps that need to be run on machine launch are 1. assigning identity and 2. finalizing Conjur configuration. 
 
 *Example: Bake a base image with Conjur packages and configuration:*
 
