@@ -31,6 +31,7 @@ apt_repository 'conjur' do
   components %w(main)
   distribution node['lsb']['codename']
   key "apt.key"
+  only_if { node['conjur']['logshipper']['conjur_repository'] }
 end
 
 package 'logshipper'

@@ -182,7 +182,9 @@ If an outgoing internet connection is not available when building the 'Foundatio
 #### Logshipper
 
 Logshipper binary packages are required for auditing ssh events and are installed by the cookbook from Conjur-managed apt and yum repos.
-Adding the repo and installing logshipper can also be accomplished manually.
+Adding the repo and installing logshipper can also be accomplished manually. If installing
+manually, set the Chef attribute `['conjur']['logshipper']['conjur_repository']` to `false`
+when running the cookbook.
 
 For example in Enterprise Linux:
 
