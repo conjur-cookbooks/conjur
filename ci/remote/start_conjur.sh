@@ -13,7 +13,6 @@ docker rm -f conjur || true
 docker pull $img
 
 docker run -p 443:443 -p 636:636 -d --name conjur \
-  -e CONJUR_APPLIANCE_URL=https://localhost/api \
   -e CONJUR_AUTHN_LOGIN=admin \
   -e CONJUR_AUTHN_API_KEY=secret \
   -e CONJUR_CERT_FILE=/opt/conjur/etc/ssl/conjur.pem \
