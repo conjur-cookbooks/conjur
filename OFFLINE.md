@@ -1,6 +1,6 @@
 # Offline conjurize instructions
 
-Machines behind a firewall can be assigned a Conjur identity, but some initial setup is required. As detailed in [README.md](README.md), all package installation is done in the 'Foundation' recipes: `install`, `conjurrc`, and optionally `client`. These recipes can be baked into a base image, they will not change. Once a machine has been assigned an identity, the `configure` recipe is run to finish setup. `configure` does not require network access, other than to your Conjur endpoint.
+Machines behind a firewall can be assigned a Conjur identity, but some initial setup is required. As detailed in [README.md](README.md), all package installation is done in the 'Foundation' recipes: `install`, `conjurrc`, and optionally `client`. These end state of these recipes (installed packages and static configuration files) can be baked into a base image, they will not change. Once a machine has been assigned an identity, the `configure` recipe is run to finish setup. `configure` does not require network access, other than to your Conjur endpoint.
 
 ---
 
