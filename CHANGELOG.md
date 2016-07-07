@@ -1,3 +1,8 @@
+# 0.4.3
+
+* Added attribute `['conjur']['logshipper']['conjur_repository']` to toggle pulling
+packages from Conjur repos in [offline scenarios](OFFLINE.md).
+
 # 0.4.2
 
 * Don't install any packages in the `configure` step.
