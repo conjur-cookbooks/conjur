@@ -1,0 +1,17 @@
+FROM debian:jessie
+MAINTAINER Conjur, Inc
+
+RUN apt-get update -yqq && apt-get install -yq rsync curl ssh build-essential
+
+RUN curl -L -o /tmp/chefdk.deb https://packages.chef.io/files/stable/chefdk/0.15.16/debian/8/chefdk_0.15.16-1_amd64.deb && \
+  dpkg -i /tmp/chefdk.deb && \
+  rm /tmp/chefdk.deb
+
+# Add ChefDK's Ruby to path
+ENV PATH /opt/chefdk/embedded/bin:$PATH
+
+RUN mkdir -p /src
+WORKDIR /src
+
+COPY Gemfile ./
+RUN chef exec bundle install --with unit

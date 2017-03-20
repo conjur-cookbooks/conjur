@@ -1,0 +1,9 @@
+AllCops:
+  Exclude:
+    - Berksfile
+    - 'ci/**/*'
+    - 'vendor/**/*'
+    - 'cookbooks/**/*'
+# Customize rules
+Metrics/LineLength:
+  Max: 120
