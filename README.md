@@ -6,7 +6,7 @@ This cookbook is composed of several recipes, which can be used at different sta
 
 The lifecycle is roughly intended to operate like this:
 
-* A base OS image from the CentOS or Ubuntu LTS family is selected. 
+* A base OS image from the CentOS or Ubuntu LTS family is selected.
 * The "foundation" cookbooks run on the base OS image to configure the connection to Conjur (and other desired systems), install packages, and perform static configuration.
 * A "foundation" image is captured after the foundation cookbooks have completed.
 * Machines are launched from the "foundation" image. Each machine is [provided with Conjur identity](https://developer.conjur.net/key_concepts/machine_identity.html), then a Chef run finishes the machine configuration (e.g. configure the host credentials for LDAPS connection to Conjur). At this point, Chef (or other configuration management tools) may also install and configure applications on top of the base OS foundation.
@@ -74,7 +74,13 @@ Creates the `/etc/conjur.conf` and `/etc/conjur-[acct].pem` from Chef attributes
 
 ## Tests
 
-This cookbook is verified by both `chefspec` and `serverspec` tests. Conjur Inc also verifies the correct operation of the SSH functionality on all supported platforms. More details about testing can be found in [README.ci.md](README.ci.md).
+This cookbook is verified by both `chefspec` and `serverspec` tests. Conjur Inc also verifies the correct operation of the SSH functionality on all supported platforms.
+
+Run `jenkins.sh` to lint and unit test.
+
+Run `jenkins_acceptance.sh` to run EC2 integration tests. By default this script runs
+all test-kitchen suites defined in [.kitchen.yml](.kitchen.yml), but you can also pass a specific
+suite to run like so: `jenkins_acceptance.sh ubuntu-16`.
 
 ## Offline installation
 

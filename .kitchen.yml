@@ -71,7 +71,7 @@ suites:
       conjur:
         identity:
           account: cucumber
-          login: user
+          login: host/test
           password: password
         configuration:
           account: cucumber

@@ -36,7 +36,6 @@ function testC() {
 
 
 function run_kitchen_tests() {
-  testC kitchen create -c $CONCURRENCY $SUITE
   testC kitchen test -c $CONCURRENCY $SUITE
 }
 
