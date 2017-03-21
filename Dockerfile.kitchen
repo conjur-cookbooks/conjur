@@ -16,4 +16,7 @@ RUN mkdir -p /src
 WORKDIR /src
 
 COPY Gemfile ./
-RUN chef exec bundle install --without kitchen
+RUN chef exec bundle install --without unit
+
+COPY entrypoint.sh /src/entrypoint.sh
+ENTRYPOINT ["/src/entrypoint.sh"]
