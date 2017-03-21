@@ -7,8 +7,6 @@ function main() {
   check_syntax
   lint_cookbook
   run_specs
-
-  ./jenkins_acceptance.sh
 }
 
 function build_test_image() {
