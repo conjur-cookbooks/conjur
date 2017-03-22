@@ -1,14 +1,13 @@
 ---
 driver:
   name: ec2
-  aws_ssh_key_id: <%= ENV['AWS_SSH_KEY_ID'] %>
-  region: us-east-1
   instance_type: m3.medium
+  region: us-east-1
 
 transport:
   connection_timeout: 10
   connection_retries: 5
-  ssh_key: <%= ENV['AWS_PRIVATE_KEY'] %>
+  ssh_key: /tmp/key.pem
 
 provisioner:
   name: chef_zero
@@ -17,7 +16,7 @@ provisioner:
 platforms:
   - name: amazon
     driver:
-      image_id: ami-60b6c60a
+      image_id: ami-0b33d91d  # Amazon Linux 2016.09.1, hvm:ebs-ssd
     transport:
       username: ec2-user
   - name: centos-6
@@ -45,6 +44,11 @@ platforms:
       image_id: ami-663a6e0c
     transport:
       username: ubuntu
+  - name: ubuntu-16
+    driver:
+      image_id: ami-2757f631  # Ubuntu 16.04LTS, hvm:ebs-ssd, 20170307
+    transport:
+      username: ubuntu
   - name: rhel-6
     driver:
       image_id: ami-0d28fe66
@@ -67,9 +71,9 @@ suites:
       conjur:
         identity:
           account: cucumber
-          login: <%= ENV['CONJUR_AUTHN_LOGIN'] %>
-          password: <%= ENV['CONJUR_AUTHN_API_KEY'] %>
+          login: host/test
+          password: password
         configuration:
           account: cucumber
-          appliance_url: <%= ENV['CONJUR_APPLIANCE_URL'] %>
-          ssl_certificate: "<%= ENV['CONJUR_SSL_CERTIFICATE'] %>"
+          appliance_url: https://appliance.test.com
+          ssl_certificate: "dummysslcertcontent"

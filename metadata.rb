@@ -7,8 +7,8 @@ version          '0.4.3'
 
 recipe "conjur::install", "Installs Conjur base packages and configuration, suitable for a foundation image."
 
-depends "apt"
-depends "yum"
+depends "apt", '~> 5.1.0'
+depends "yum", '~> 4.2.0'
 depends "sshd-service"
 
 #depends 'selinux', '~> 0.9'

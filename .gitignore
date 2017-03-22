@@ -1,3 +1,4 @@
+env.properties
 Gemfile.lock
 syntaxcache
 rubocop.xml
