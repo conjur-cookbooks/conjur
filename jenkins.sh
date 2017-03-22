@@ -7,6 +7,7 @@ function main() {
   check_syntax
   lint_cookbook
   run_specs
+  export_suites
 }
 
 function build_test_image() {
@@ -42,6 +43,11 @@ function run_specs() {
 berks vendor vendor/
 rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/
 EOF
+}
+
+function export_suites() {
+  local suites=$(testC ruby -ryaml -e "puts YAML.load(File.read('.kitchen.yml'))['platforms'].collect {|p| %Q(default-#{p['name']})}.join(' ')")
+  echo "SUITES=$suites" > env.properties
 }
 
 main
