@@ -16,7 +16,7 @@ provisioner:
 platforms:
   - name: amazon
     driver:
-      image_id: ami-60b6c60a
+      image_id: ami-0b33d91d  # Amazon Linux 2016.09.1, hvm:ebs-ssd
     transport:
       username: ec2-user
   - name: centos-6
