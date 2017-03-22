@@ -38,7 +38,10 @@ function lint_cookbook() {
 
 function run_specs() {
   echo 'Running rspec unit tests'
-  testC rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/
+  testC bash -s <<EOF
+berks vendor vendor/
+rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/
+EOF
 }
 
 main
