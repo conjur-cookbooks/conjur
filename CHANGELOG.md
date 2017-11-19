@@ -1,6 +1,7 @@
 # 0.4.4
 
 * Change repository addresses to {apt,yum}.conjur.org.
+* Support amazon platform family with newer Chef versions.
 
 # 0.4.3
 
