@@ -26,7 +26,7 @@ end
 openldap_dir = case node['platform_family']
   when 'debian'
     '/etc/ldap'
-  when 'rhel'
+  when 'rhel', 'amazon'
     '/etc/openldap'
   else 
     raise "Unsupported platform family : #{node['platform_family']}"
@@ -44,7 +44,7 @@ end
 nslcd_gid = case node['platform_family']
   when 'debian'
     'nslcd'
-  when 'rhel'
+  when 'rhel', 'amazon'
     'ldap'
   else 
     raise "Unsupported platform family : #{node['platform_family']}"

@@ -35,7 +35,7 @@ case node['platform_family']
     raise "Unsupported platform family : #{node['platform_family']}"
 end
 
-if node["platform_family"] == "rhel" && node['conjur']['selinux_enabled']
+if %w(rhel amazon).include?(node["platform_family"]) && node['conjur']['selinux_enabled']
   include_recipe 'conjur::_install_selinux'
 end
 

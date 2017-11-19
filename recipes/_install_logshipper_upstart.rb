@@ -15,7 +15,7 @@ upstart_script = %Q(
 
 # workarounds
 case node['platform_family']
-when 'rhel'
+when 'rhel', 'amazon'
   upstart_script = %Q(
     # rsyslog isn't upstarted here
     start on (local-filesystems and net-device-up IFACE!=lo)
