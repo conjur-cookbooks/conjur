@@ -43,7 +43,7 @@ releasever = {
 
 yum_repository 'conjur' do
   description 'Conjur Inc.'
-  baseurl "https://s3.amazonaws.com/yum.conjur/el/#{releasever}"
+  baseurl "http://yum.conjur.org/el/#{releasever}"
   gpgkey 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Conjur'
   only_if { node['conjur']['logshipper']['conjur_repository'] }
 end

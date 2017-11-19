@@ -189,16 +189,16 @@ when running the cookbook.
 For example in Enterprise Linux:
 
 ```
-# yum-config-manager --add-repo https://s3.amazonaws.com/yum.conjur/conjur.repo
+# yum-config-manager --add-repo https://s3.amazonaws.com/yum.conjur.org/conjur.repo
 # yum-config-manager --enable conjur
 # yum install logshipper
 ```
 
 On CentOS 7 this will install packages from the Conjur repo like:
 
-- [logshipper-0.2.3-1.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/logshipper-0.2.3-1.el7.x86_64.rpm),
-- [yaml-cpp-0.5.1-6.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/yaml-cpp-0.5.1-6.el7.x86_64.rpm),
-- [jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur/el/7/x86_64/jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm),
+- [logshipper-0.2.3-1.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur.org/el/7/x86_64/logshipper-0.2.3-1.el7.x86_64.rpm),
+- [yaml-cpp-0.5.1-6.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur.org/el/7/x86_64/yaml-cpp-0.5.1-6.el7.x86_64.rpm),
+- [jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm](https://s3.amazonaws.com/yum.conjur.org/el/7/x86_64/jsoncpp-0.6.0-0.9.rc2.el7.x86_64.rpm),
 
 along with dependencies from the system repository:
 
@@ -207,3 +207,5 @@ along with dependencies from the system repository:
 - boost-regex
 - boost-system
 - libicu
+
+and the [build@conjur.net package signing key](https://pgp.mit.edu/pks/lookup?op=vindex&search=0xBE332A6015C7B700)  (fingerprint 5C222DDC0332C87E2EE2430FBE332A6015C7B700).

@@ -27,7 +27,7 @@ execute "pam-auth-update" do
 end
 
 apt_repository 'conjur' do
-  uri 'http://apt.conjur.s3-website-us-east-1.amazonaws.com'
+  uri 'http://apt.conjur.org'
   components %w(main)
   distribution node['lsb']['codename']
   key "apt.key"

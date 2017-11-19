@@ -1,3 +1,7 @@
+# 0.4.4
+
+* Change repository addresses to {apt,yum}.conjur.org.
+
 # 0.4.3
 
 * Added attribute `['conjur']['logshipper']['conjur_repository']` to toggle pulling
