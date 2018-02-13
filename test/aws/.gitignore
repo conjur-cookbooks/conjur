@@ -1,0 +1,9 @@
+# these are sensitive and should go straight to Conjur
+/key.pem
+/access.key
+
+# these temporary files are used when creating a new stack
+/key.imported
+/stack.creating
+/stack.status
+

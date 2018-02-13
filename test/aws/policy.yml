@@ -1,0 +1,39 @@
+- &variables
+  - !variable dev/aws/iam/users/test-kitchen/access_key_id
+  - !variable dev/aws/iam/users/test-kitchen/secret_access_key
+  - !variable dev/aws/ec2/ssh-keys/test-kitchen
+
+- !group dev/aws/test-kitchen/users
+- !group dev/aws/test-kitchen/admins
+
+- !permit
+  role: !group dev/aws/test-kitchen/users
+  privileges: [ read, execute ]
+  resource: *variables
+
+- !permit
+  role: !group dev/aws/test-kitchen/admins
+  privileges: [ update ]
+  resource: *variables
+
+- !grant
+  role: !group dev/aws/test-kitchen/users
+  member:
+    role: !group dev/aws/test-kitchen/admins
+    admin: true
+
+# entitlements
+
+- !grant
+  role: !group dev/aws/test-kitchen/users
+  member: !group developers
+
+- !grant
+  role: !group dev/aws/test-kitchen/users
+  member: !layer ci/jenkins/executors
+
+- !grant
+  role: !group dev/aws/test-kitchen/admins
+  member:
+    role: !group operations
+    admin: true

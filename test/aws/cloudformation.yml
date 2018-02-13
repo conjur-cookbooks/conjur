@@ -1,0 +1,104 @@
+Parameters:
+  KeyPair:
+    Description: Key pair name for usage with test kitchen.
+    Type: AWS::EC2::KeyPair::KeyName
+  VpcCidr:
+    Description: CIDR block for the test kitchen dedicated VPC.
+    Type: String
+    Default: 10.107.116.0/24
+
+Resources:
+  kitchenuser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies:
+      - PolicyName: kitchenec2
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action: ec2:RunInstances
+            Resource:
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/${KeyPair}
+            - !Sub arn:aws:ec2:${AWS::Region}::image/ami-*
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${subnet}
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:security-group/${vpc.DefaultSecurityGroup}
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+
+          - Effect: Allow
+            Action: ec2:Describe*
+            Resource: "*"
+
+          - Effect: Allow
+            Action: ec2:CreateTags
+            Resource: !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            Condition:
+              StringLike:
+                aws:RequestTag/Name: "*test kitchen*"
+              StringEquals:
+                aws:RequestTag/created-by: test-kitchen
+
+          - Effect: Allow
+            Action: ec2:TerminateInstances
+            Resource: !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            Condition:
+              StringEquals:
+                ec2:ResourceTag/created-by: test-kitchen
+
+  gateway:
+    Type: AWS::EC2::InternetGateway
+
+  vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+
+  subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref vpc
+      Tags:
+      - Key: purpose
+        Value: kitchen-test
+
+  gatewayattachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref gateway
+      VpcId: !Ref vpc
+
+  routetable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref vpc
+
+  internetroute:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref gateway
+      RouteTableId: !Ref routetable
+
+  subnetattachment:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref routetable
+      SubnetId: !Ref subnet
+
+  sshingress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !GetAtt vpc.DefaultSecurityGroup
+      IpProtocol: tcp
+      FromPort: 22
+      ToPort: 22
+      CidrIp: 0.0.0.0/0
+
+Outputs:
+  SubnetId:
+    Value: !Ref subnet
+  UserName:
+    Value: !Ref kitchenuser

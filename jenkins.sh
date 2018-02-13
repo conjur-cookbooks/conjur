@@ -5,7 +5,7 @@ function main() {
   check_syntax
   lint_cookbook
   run_specs
-  export_suites
+  test_kitchen
 }
 
 function build_test_image() {
@@ -48,6 +48,10 @@ EOF
 function export_suites() {
   local suites=$(testC ruby -ryaml -e "puts YAML.load(File.read('.kitchen.yml'))['platforms'].collect {|p| %Q(default-#{p['name']})}.join(' ')")
   echo "SUITES=$suites" > env.properties
+}
+
+function test_kitchen() {
+  ./kitchen.sh kitchen test -c -d always
 }
 
 # allow running manually or through Jenkins pipeline

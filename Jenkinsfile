@@ -30,6 +30,11 @@ pipeline {
             junit 'ci/reports/specs.xml'
           }
         }
+        stage('Test kitchen') {
+          steps {
+            sh "summon ./jenkins.sh test_kitchen"
+          }
+        }
       }
     }
   }
