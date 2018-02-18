@@ -7,7 +7,7 @@ GRAPH
   apt (5.1.0)
     compat_resource (>= 12.16.3)
   compat_resource (12.19.0)
-  conjur (0.4.4)
+  conjur (0.4.5)
     apt (~> 5.1.0)
     sshd-service (>= 0.0.0)
     yum (~> 4.2.0)

@@ -1,3 +1,7 @@
+# 0.4.5
+
+* Fix some issues on xenial.
+
 # 0.4.4
 
 * Change repository addresses to {apt,yum}.conjur.org.
