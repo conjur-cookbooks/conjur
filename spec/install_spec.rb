@@ -31,11 +31,11 @@ describe "conjur::install" do
     end
   end
   
-  context "ubuntu platform" do
+  context "on ubuntu platform" do
     let(:platform) { 'ubuntu' }
     let(:version) { '12.04' }
     before {
-      chef_run.node.automatic.platform_family = 'debian'
+      chef_run.node.automatic['platform_family'] = 'debian'
     }
     
     it_behaves_like "common installation"
@@ -54,8 +54,8 @@ describe "conjur::install" do
     let(:version) { '6.2' }
 
     before {
-      chef_run.node.automatic.platform_family = 'rhel'
-      chef_run.node.automatic.conjur.selinux_enabled = true
+      chef_run.node.automatic['platform_family'] = 'rhel'
+      chef_run.node.automatic['conjur']['selinux_enabled'] = true
     }
     
     it_behaves_like "common installation"
