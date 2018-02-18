@@ -48,7 +48,16 @@ describe "conjur::install" do
       expect(subject).to add_apt_repository("conjur")
       expect(subject).to install_package("logshipper")
     end
+
+    context "version 16.04" do
+      let(:version) { '16.04' }
+      it "creates logshipper pipe with syslog group" do
+        expect(subject).to render_file('/etc/systemd/system/logshipper.service')
+          .with_content /chown logshipper:syslog/
+      end
+    end
   end
+
   context "centos platform" do
     let(:platform) { 'centos' }
     let(:version) { '6.2' }

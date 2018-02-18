@@ -1,0 +1,18 @@
+[Unit]
+Description=Conjur log shipping service
+Documentation=https://developer.conjur.net
+Wants=rsyslog.service
+Before=rsyslog.service
+
+[Service]
+ExecStartPre=-/bin/rm /var/run/logshipper
+ExecStartPre=/usr/bin/mkfifo --context --mode 0460 /var/run/logshipper
+ExecStartPre=/bin/chown logshipper:syslog /var/run/logshipper
+ExecStart=/usr/sbin/logshipper -n /var/run/logshipper
+Restart=always
+User=logshipper
+Group=conjur
+PermissionsStartOnly=true
+
+[Install]
+RequiredBy=rsyslog.service
