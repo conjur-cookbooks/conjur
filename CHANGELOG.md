@@ -1,6 +1,6 @@
 # 0.4.5
 
-* Fix some issues on xenial.
+* Fix some issues on Ubuntu 16.04 preventing mkhomedir and logshipper from working correctly.
 
 # 0.4.4
 
