@@ -30,3 +30,7 @@ end
 describe package("nss-pam-ldapd"), :if => os[:family] == 'rhel' do
   it { should be_installed }
 end
+
+describe file("/etc/pam.d/common-session") do
+  its(:content) { should match /mkhomedir/ }
+end
