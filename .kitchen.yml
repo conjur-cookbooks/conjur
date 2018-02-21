@@ -1,19 +1,24 @@
 ---
 driver:
   name: ec2
-  instance_type: m3.medium
   region: us-east-1
+  subnet_id: subnet-d0a7edef
+  aws_ssh_key_id: test-kitchen
+  tags:
+    created-by: test-kitchen
+    Name: conjur cookbook test kitchen
 
 transport:
   connection_timeout: 10
   connection_retries: 5
-  ssh_key: /tmp/key.pem
+  ssh_key: /var/sshkey.pem
 
 provisioner:
   name: chef_zero
   data_path: ci
 
-platforms:
+# TODO these platforms need fixing
+broken_platforms:
   - name: amazon
     driver:
       image_id: ami-0b33d91d  # Amazon Linux 2016.09.1, hvm:ebs-ssd
@@ -44,6 +49,8 @@ platforms:
       image_id: ami-663a6e0c
     transport:
       username: ubuntu
+
+platforms:
   - name: ubuntu-16
     driver:
       image_id: ami-2757f631  # Ubuntu 16.04LTS, hvm:ebs-ssd, 20170307

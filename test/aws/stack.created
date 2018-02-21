@@ -1,0 +1,41 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:188945769008:stack/test-kitchen/b75d7840-1560-11e8-abc1-50a686e4bb1e",
+            "StackStatus": "CREATE_COMPLETE",
+            "CreationTime": "2018-02-19T10:36:17.228Z",
+            "NotificationARNs": [],
+            "Tags": [
+                {
+                    "Value": "test-kitchen",
+                    "Key": "Name"
+                }
+            ],
+            "StackName": "test-kitchen",
+            "Outputs": [
+                {
+                    "OutputValue": "test-kitchen-kitchenuser-J88EB50R59KD",
+                    "OutputKey": "UserName"
+                },
+                {
+                    "OutputValue": "subnet-d0a7edef",
+                    "OutputKey": "SubnetId"
+                }
+            ],
+            "Capabilities": [
+                "CAPABILITY_IAM"
+            ],
+            "DisableRollback": false,
+            "Parameters": [
+                {
+                    "ParameterValue": "test-kitchen",
+                    "ParameterKey": "KeyPair"
+                },
+                {
+                    "ParameterValue": "10.107.116.0/24",
+                    "ParameterKey": "VpcCidr"
+                }
+            ]
+        }
+    ]
+}

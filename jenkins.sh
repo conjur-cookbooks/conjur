@@ -1,28 +1,27 @@
 #!/bin/bash -e
 
-readonly TEST_CONTAINER_TAG='conjur-cookbook-test'
-
 function main() {
   build_test_image
   check_syntax
   lint_cookbook
   run_specs
-  export_suites
+  test_kitchen
 }
 
 function build_test_image() {
   echo 'Building test Docker image'
-  docker build -f Dockerfile.unit -t $TEST_CONTAINER_TAG .
+  docker build -f Dockerfile.unit -t $TEST_IMAGE .
 }
 
 function testC() {
   # Run a command inside the test container
-  docker run --rm -i -v $PWD:/src -w /src $TEST_CONTAINER_TAG "$@"
+  docker run --rm -i -v $PWD:/src -w /src $TEST_IMAGE "$@"
 }
 
 function check_syntax() {
   echo 'Checking syntax with Rubocop'
   testC bash -s <<EOF
+umask 000 # so it can be cleaned up without sudo
 rubocop --format progress \
   --require rubocop/formatter/checkstyle_formatter \
   --format RuboCop::Formatter::CheckstyleFormatter \
@@ -40,6 +39,7 @@ function lint_cookbook() {
 function run_specs() {
   echo 'Running rspec unit tests'
   testC bash -s <<EOF
+umask 000 # so it can be cleaned up without sudo
 berks vendor vendor/
 rspec --format documentation --format RspecJunitFormatter --out ci/reports/specs.xml spec/
 EOF
@@ -50,4 +50,11 @@ function export_suites() {
   echo "SUITES=$suites" > env.properties
 }
 
-main
+function test_kitchen() {
+  ./kitchen.sh kitchen test -c -d always
+}
+
+# allow running manually or through Jenkins pipeline
+TEST_IMAGE=${TEST_IMAGE:-conjur-cookbook-test}
+COMMAND=${1:-main}
+$COMMAND
