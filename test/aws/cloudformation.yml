@@ -104,3 +104,5 @@ Outputs:
     Value: !Ref subnet
   UserName:
     Value: !Ref kitchenuser
+  SecurityGroupId:
+    Value: !GetAtt vpc.DefaultSecurityGroup

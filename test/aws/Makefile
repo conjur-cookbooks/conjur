@@ -65,10 +65,12 @@ endif
 
 update-kitchen: REGION = $(shell cat stack.created | jq -r '.Stacks[0].StackId | split(":")[3]')
 update-kitchen: SUBNET = $(shell cat stack.created | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "SubnetId").OutputValue')
+update-kitchen: SG = $(shell cat stack.created | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "SecurityGroupId").OutputValue')
 update-kitchen: stack.created
 	@sed -i "\
 		s/\(^\s\+region\):.*/\1: $(REGION)/;\
 		s/\(^\s\+subnet_id\):.*/\1: $(SUBNET)/;\
-		s/\(^\s\+aws_ssh_key_id\):.*/\1: $(KEYPAIR_NAME)/\
+		s/\(^\s\+aws_ssh_key_id\):.*/\1: $(KEYPAIR_NAME)/;\
+		s/\(^\s\+security_group_ids\):.*/\1: [$(SG)]/;\
 	" ../../.kitchen.yml
 	@echo "../../kitchen.yml updated. Make sure to commit it."
