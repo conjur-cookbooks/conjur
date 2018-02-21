@@ -1,41 +1,46 @@
 {
     "Stacks": [
         {
+            "LastUpdatedTime": "2018-02-21T22:45:32.818Z",
             "StackId": "arn:aws:cloudformation:us-east-1:188945769008:stack/test-kitchen/b75d7840-1560-11e8-abc1-50a686e4bb1e",
-            "StackStatus": "CREATE_COMPLETE",
-            "CreationTime": "2018-02-19T10:36:17.228Z",
-            "NotificationARNs": [],
             "Tags": [
                 {
                     "Value": "test-kitchen",
                     "Key": "Name"
                 }
             ],
-            "StackName": "test-kitchen",
             "Outputs": [
                 {
-                    "OutputValue": "test-kitchen-kitchenuser-J88EB50R59KD",
-                    "OutputKey": "UserName"
+                    "OutputKey": "UserName",
+                    "OutputValue": "test-kitchen-kitchenuser-J88EB50R59KD"
                 },
                 {
-                    "OutputValue": "subnet-d0a7edef",
-                    "OutputKey": "SubnetId"
+                    "OutputKey": "SecurityGroupId",
+                    "OutputValue": "sg-a483a1d3"
+                },
+                {
+                    "OutputKey": "SubnetId",
+                    "OutputValue": "subnet-d0a7edef"
+                }
+            ],
+            "NotificationARNs": [],
+            "Parameters": [
+                {
+                    "ParameterKey": "KeyPair",
+                    "ParameterValue": "test-kitchen"
+                },
+                {
+                    "ParameterKey": "VpcCidr",
+                    "ParameterValue": "10.107.116.0/24"
                 }
             ],
             "Capabilities": [
                 "CAPABILITY_IAM"
             ],
+            "StackName": "test-kitchen",
             "DisableRollback": false,
-            "Parameters": [
-                {
-                    "ParameterValue": "test-kitchen",
-                    "ParameterKey": "KeyPair"
-                },
-                {
-                    "ParameterValue": "10.107.116.0/24",
-                    "ParameterKey": "VpcCidr"
-                }
-            ]
+            "StackStatus": "UPDATE_COMPLETE",
+            "CreationTime": "2018-02-19T10:36:17.228Z"
         }
     ]
 }

@@ -12,7 +12,8 @@ key.imported: key.pem
 	aws ec2 import-key-pair --key-name $(KEYPAIR_NAME) --public-key-material "`ssh-keygen -y -f $<`" | tee $@
 
 stack.creating: cloudformation.yml key.imported
-	aws cloudformation create-stack \
+	aws cloudformation \
+	  `[ -f stack.created ] && echo update-stack || echo create-stack` \
 		--stack-name $(STACK_NAME) \
 		--capabilities CAPABILITY_IAM \
 		--parameters ParameterKey=KeyPair,ParameterValue=$(KEYPAIR_NAME) \
@@ -23,9 +24,9 @@ stack.creating: cloudformation.yml key.imported
 stack.created: stack.creating
 	@echo Waiting for the stack to be created...
 	@until aws cloudformation describe-stacks --stack-name $(STACK_NAME) | \
-		tee stack.status | jq -r '.Stacks[0].StackStatus' | grep CREATE_COMPLETE; do \
+		tee stack.status | jq -r '.Stacks[0].StackStatus' | grep _COMPLETE; do \
 		cat stack.status | jq -r '.Stacks[0].StackStatus';\
-		sleep 40;\
+		sleep 10;\
 	done
 	@mv stack.status $@
 	@echo "Stack created. Make sure to commit $@"
@@ -64,10 +65,12 @@ endif
 
 update-kitchen: REGION = $(shell cat stack.created | jq -r '.Stacks[0].StackId | split(":")[3]')
 update-kitchen: SUBNET = $(shell cat stack.created | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "SubnetId").OutputValue')
+update-kitchen: SG = $(shell cat stack.created | jq -r '.Stacks[0].Outputs[] | select(.OutputKey == "SecurityGroupId").OutputValue')
 update-kitchen: stack.created
 	@sed -i "\
 		s/\(^\s\+region\):.*/\1: $(REGION)/;\
 		s/\(^\s\+subnet_id\):.*/\1: $(SUBNET)/;\
-		s/\(^\s\+aws_ssh_key_id\):.*/\1: $(KEYPAIR_NAME)/\
+		s/\(^\s\+aws_ssh_key_id\):.*/\1: $(KEYPAIR_NAME)/;\
+		s/\(^\s\+security_group_ids\):.*/\1: [$(SG)]/;\
 	" ../../.kitchen.yml
 	@echo "../../kitchen.yml updated. Make sure to commit it."

@@ -32,7 +32,9 @@ Resources:
 
           - Effect: Allow
             Action: ec2:CreateTags
-            Resource: !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            Resource:
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - !Sub arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
             Condition:
               StringLike:
                 aws:RequestTag/Name: "*test kitchen*"
@@ -102,3 +104,5 @@ Outputs:
     Value: !Ref subnet
   UserName:
     Value: !Ref kitchenuser
+  SecurityGroupId:
+    Value: !GetAtt vpc.DefaultSecurityGroup

@@ -31,6 +31,11 @@ describe package("nss-pam-ldapd"), :if => os[:family] == 'rhel' do
   it { should be_installed }
 end
 
-describe file("/etc/pam.d/common-session") do
+describe file(
+  # find out which file exists that should have mkhomedir in it
+  %w(common-session system-auth)
+    .map { |x| x.prepend '/etc/pam.d/' }
+    .find(&File.method(:exists?))
+) do
   its(:content) { should match /mkhomedir/ }
 end
