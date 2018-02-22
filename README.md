@@ -35,6 +35,7 @@ These recipes can be used to build a "foundation" image, which is able to create
 * RHEL 7
 * Ubuntu 12.04 LTS
 * Ubuntu 14.04 LTS
+* Ubuntu 16.04 LTS
 
 ### Dependency Cookbooks
 

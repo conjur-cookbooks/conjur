@@ -2,9 +2,9 @@
 driver:
   name: ec2
   region: us-east-1
-  subnet_id: subnet-d0a7edef
+  subnet_id: subnet-1c425957
   aws_ssh_key_id: test-kitchen
-  security_group_ids: [sg-a483a1d3]
+  security_group_ids: [sg-c54c4db2]
   tags:
     created-by: test-kitchen
     Name: conjur cookbook test kitchen
