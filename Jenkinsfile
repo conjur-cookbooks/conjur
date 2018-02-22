@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Test kitchen') {
           steps {
-            sh "summon ./jenkins.sh test_kitchen"
+            sh "summon -f secrets.ci.yml ./jenkins.sh test_kitchen"
           }
         }
       }
